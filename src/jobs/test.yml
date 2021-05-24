@@ -14,6 +14,7 @@ parameters:
     type: string
     default: /tmp/artifacts
 steps:
+  - checkout
   - test:
       results-folder: << parameters.results-folder >>
   - check-coverage:
