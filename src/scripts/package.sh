@@ -1,0 +1,1 @@
+zip $OUTPUT_FILE $INPUT_FILE
