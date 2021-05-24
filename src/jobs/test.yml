@@ -1,0 +1,21 @@
+description: >
+  This job run the AWS Lambda Go function tests
+
+executor: default
+
+parameters:
+  results-folder:
+    type: string
+    default: /tmp/test_results
+  minimum-coverage:
+    type: string
+    default: 85.00
+  artifacts-folder:
+    type: string
+    default: /tmp/artifacts
+steps:
+  - test:
+      results-folder: << parameters.results-folder >>
+  - check-coverage:
+      minimum-coverage: << parameters.minimum-coverage >>
+      artifacts-folder: << parameters.artifacts-folder >>

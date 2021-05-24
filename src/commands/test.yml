@@ -1,0 +1,15 @@
+description: >
+  This command run the AWS Lambda Go function tests
+parameters:
+  results-folder:
+    type: string
+    default: /tmp/test_results
+steps:
+  - run:
+      name: Run tests
+      environment:
+        RESULTS_FOLDER: << parameters.results-folder >>
+      command: <<include(scripts/test.sh)>>
+  - store_test_results:
+      name: Store tests results
+      path: << parameters.results-folder >>

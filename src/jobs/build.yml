@@ -1,0 +1,18 @@
+description: >
+  This job build and package the AWS Lambda Go function executable
+
+executor: default
+
+parameters:
+  build-output-file:
+    type: string
+    default: main
+  package-output-file:
+    type: string
+    default: pulumi/lambda.zip
+steps:
+  - build:
+      output-file: << parameters.build-output-file >>
+  - package:
+      input-file: << parameters.build-output-file >>
+      output-file: << parameters.package-output-file >>

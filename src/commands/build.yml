@@ -1,0 +1,12 @@
+description: >
+  This command build the AWS Lambda Go function executable
+parameters:
+  output-file:
+    type: string
+    default: main
+steps:
+  - run:
+      name: Build executable
+      environment:
+        OUTPUT_FILE: << parameters.output-file >>
+      command: <<include(scripts/build.sh)>>

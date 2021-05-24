@@ -1,0 +1,21 @@
+description: >
+  This command package the AWS Lambda Go function
+parameters:
+  input-file:
+    type: string
+    default: main
+  output-file:
+    type: string
+    default: pulumi/lambda.zip
+steps:
+  - run:
+      name: Package executable
+      environment:
+        INPUT_FILE: << parameters.input-file >>
+        OUTPUT_FILE: << parameters.output-file >>
+      command: <<include(scripts/package.sh)>>
+  - persist_to_workspace:
+      name: Store package
+      root: .
+      paths:
+        - << parameters.output-file >>
