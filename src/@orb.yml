@@ -3,7 +3,6 @@ version: 2.1
 description: >
   Test and build AWS Lambda Go functions
 
-# This information will be displayed in the orb registry and is not mandatory.
 display:
-  home_url: "https://kolors.com.mx/"
+  home_url: "https://kolors.com.mx"
   source_url: "https://github.com/10xLabs/aws-lambda-go-orb"
