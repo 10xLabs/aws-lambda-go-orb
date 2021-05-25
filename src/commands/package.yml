@@ -13,7 +13,7 @@ steps:
       environment:
         INPUT_FILE: << parameters.input-file >>
         OUTPUT_FILE: << parameters.output-file >>
-      command: <<include(scripts/package.sh)>>
+      command: << include(scripts/package.sh) >>
   - persist_to_workspace:
       name: Store package
       root: .

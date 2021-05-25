@@ -13,7 +13,7 @@ View the included _[hello.yml](./hello.yml)_ example.
 description: >
   This is a sample executor using Docker and Go.
 docker:
-  - image: 'cimg/go:<<parameters.tag>>'
+  - image: 'cimg/go:<< parameters.tag >>'
 parameters:
   tag:
     default: lts

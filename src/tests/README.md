@@ -22,8 +22,8 @@ steps:
   - run:
       name: "Ensure destination path"
       environment:
-        ORB_SOURCE_PATH: <<parameters.source>>
-      command: <<include(scripts/command.sh)>>
+        ORB_SOURCE_PATH: << parameters.source >>
+      command: << include(scripts/command.sh) >>
 ```
 <!--- <span> is used to disable the automatic linking to a potential website. --->
 ## **Example _command<span>.sh_**

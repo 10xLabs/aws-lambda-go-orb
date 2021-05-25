@@ -12,7 +12,7 @@ steps:
       name: Export tests coverage
       environment:
         ARTIFACTS_FOLDER: << parameters.artifacts-folder >>
-      command: <<include(scripts/export_coverage.sh)>>
+      command: << include(scripts/export_coverage.sh) >>
   - store_artifacts:
       name: Store tests coverage
       path: << parameters.artifacts-folder >>
@@ -20,4 +20,4 @@ steps:
       name: Check tests coverage
       environment:
         MINIMUM_COVERAGE: << parameters.minimum-coverage >>
-      command: <<include(scripts/check_coverage.sh)>>
+      command: << include(scripts/check_coverage.sh) >>
