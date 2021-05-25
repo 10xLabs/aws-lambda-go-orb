@@ -9,4 +9,4 @@ steps:
       name: Build executable
       environment:
         OUTPUT_FILE: << parameters.output-file >>
-      command: <<include(scripts/build.sh)>>
+      command: << include(scripts/build.sh) >>

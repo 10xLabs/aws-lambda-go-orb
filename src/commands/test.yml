@@ -9,7 +9,7 @@ steps:
       name: Run tests
       environment:
         RESULTS_FOLDER: << parameters.results-folder >>
-      command: <<include(scripts/test.sh)>>
+      command: << include(scripts/test.sh) >>
   - store_test_results:
       name: Store tests results
       path: << parameters.results-folder >>

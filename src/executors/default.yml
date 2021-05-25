@@ -1,7 +1,7 @@
 description: >
   Default executor using Docker and Go.
 docker:
-  - image: "cimg/go:<<parameters.tag>>"
+  - image: "cimg/go:<< parameters.tag >>"
 parameters:
   tag:
     default: "1.16"
