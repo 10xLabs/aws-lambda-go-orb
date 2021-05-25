@@ -9,11 +9,12 @@ parameters:
     default: /tmp/test_results
   minimum-coverage:
     type: string
-    default: 85.00
+    default: "85.00"
   artifacts-folder:
     type: string
     default: /tmp/artifacts
 steps:
+  - checkout
   - test:
       results-folder: << parameters.results-folder >>
   - check-coverage:
