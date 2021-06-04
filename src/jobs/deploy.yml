@@ -1,0 +1,12 @@
+description: >
+  This job run the AWS Lambda Go function tests
+
+executor: node
+
+parameters:
+  environment:
+    type: string
+steps:
+  - checkout
+  - deploy:
+      environment: << parameters.environment >>
