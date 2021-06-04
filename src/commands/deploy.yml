@@ -1,0 +1,14 @@
+description: >
+  This command package the AWS Lambda Go function
+parameters:
+  environment:
+    type: string
+steps:
+  - attach_workspace:
+      at: .
+  - run:
+      name: Install Pulumi CLI
+      command: << include(scripts/install_pulumi.sh) >>
+  - run:
+      name: Pulumi update
+      command: << include(scripts/pulumi_update.sh) >>

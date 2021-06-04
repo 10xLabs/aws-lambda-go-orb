@@ -4,6 +4,12 @@ parameters:
   results-folder:
     type: string
     default: /tmp/test_results
+  minimum-coverage:
+    type: string
+    default: "85.00"
+  artifacts-folder:
+    type: string
+    default: /tmp/artifacts
 steps:
   - run:
       name: Run tests
@@ -13,3 +19,16 @@ steps:
   - store_test_results:
       name: Store tests results
       path: << parameters.results-folder >>
+  - run:
+      name: Export tests coverage
+      environment:
+        ARTIFACTS_FOLDER: << parameters.artifacts-folder >>
+      command: << include(scripts/export_coverage.sh) >>
+  - store_artifacts:
+      name: Store tests coverage
+      path: << parameters.artifacts-folder >>
+  - run:
+      name: Check tests coverage
+      environment:
+        MINIMUM_COVERAGE: << parameters.minimum-coverage >>
+      command: << include(scripts/check_coverage.sh) >>
