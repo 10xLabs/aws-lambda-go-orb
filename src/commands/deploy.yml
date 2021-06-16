@@ -1,15 +1,11 @@
 description: >
   This command package the AWS Lambda Go function
-parameters:
-  environment:
-    type: string
+
 steps:
   - attach_workspace:
       at: .
   - run:
       name: Set stack name
-      environment:
-        ENVIRONMENT: << parameters.environment >>
       command: << include(scripts/set_stack_name.sh) >>
   - run:
       name: Install Pulumi CLI
