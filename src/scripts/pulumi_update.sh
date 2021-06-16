@@ -1,4 +1,4 @@
-if pulumi stack ls --cwd pulumi | grep -q "$STACK_NAME"; then
+if pulumi stack ls --cwd pulumi | grep -q ^"$STACK_NAME"; then
 echo "exists"
 else
 echo "create"
