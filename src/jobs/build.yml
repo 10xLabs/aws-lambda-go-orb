@@ -3,6 +3,20 @@ description: >
 
 executor: go
 
+parameters:
+  build-input-file:
+    type: string
+    default: main.go
+  build-output-file:
+    type: string
+    default: main
+  package-output-file:
+    type: string
+    default: deploy/lambda.zip
+
 steps:
   - checkout
-  - build
+  - build:
+      build-input-file: << parameters.build-input-file >>
+      build-output-file: << parameters.build-output-file >>
+      package-output-file: << parameters.package-output-file >>
