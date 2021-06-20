@@ -12,7 +12,7 @@ parameters:
     default: main
   package-output-file:
     type: string
-    default: pulumi/lambda.zip
+    default: deploy/lambda.zip
 
 steps:
   - checkout
