@@ -1,0 +1,2 @@
+github.com/10xLabs/segments-projector/applier/segment_applier.go:281:		applySegmentCompanyLineSpecFareSubtotalChanged	100.0%
+total:										(statements)					100.0%
