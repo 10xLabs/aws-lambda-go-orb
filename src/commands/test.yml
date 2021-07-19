@@ -1,5 +1,6 @@
 description: >
   This command run the AWS Lambda Go function tests
+
 parameters:
   results-folder:
     type: string
@@ -10,6 +11,7 @@ parameters:
   artifacts-folder:
     type: string
     default: /tmp/artifacts
+
 steps:
   - run:
       name: Run tests

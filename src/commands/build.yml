@@ -1,5 +1,6 @@
 description: >
   This command build the AWS Lambda Go function executable
+
 parameters:
   build-input-file:
     type: string
@@ -10,6 +11,7 @@ parameters:
   package-output-file:
     type: string
     default: deploy/lambda.zip
+
 steps:
   - run:
       name: Build executable

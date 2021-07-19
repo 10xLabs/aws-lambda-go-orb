@@ -1,5 +1,5 @@
 # shellcheck disable=SC2153
-input_parentdir="$(dirname "$INPUT_FILE")"
-input_file="$(basename "$INPUT_FILE")"
-output_realpath="$(realpath "$OUTPUT_FILE")"
-cd "$input_parentdir" && zip "$output_realpath" "$input_file"
+INPUT_PARENT_DIR="$(dirname "$INPUT_FILE")"
+INPUT_FILE_PATH="$(basename "$INPUT_FILE")"
+OUTPUT_REALPATH="$(realpath "$OUTPUT_FILE")"
+cd "$INPUT_PARENT_DIR" && zip "$OUTPUT_REALPATH" "$INPUT_FILE_PATH"
