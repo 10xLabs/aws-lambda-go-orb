@@ -1,0 +1,13 @@
+description: >
+  This lint commit using conventional commits format
+
+steps:
+  - run:
+      name: Install commit linter
+      command: << include(scripts/install_commit_linter.sh) >>
+  - run:
+      name: Configure commit linter
+      command: << include(scripts/configure_commit_linter.sh) >>
+  - run:
+      name: Lint commit
+      command: << include(scripts/lint_commit.sh) >>

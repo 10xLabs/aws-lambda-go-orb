@@ -3,6 +3,12 @@ description: >
 
 executor: node
 
+parameters:
+  working-directory:
+    type: string
+    default: deploy
+
 steps:
   - checkout
-  - deploy
+  - deploy:
+    working-directory: << parameters.working-directory >>

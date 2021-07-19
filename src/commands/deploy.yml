@@ -1,6 +1,11 @@
 description: >
   This command package the AWS Lambda Go function
 
+parameters:
+  working-directory:
+    type: string
+    default: deploy
+
 steps:
   - attach_workspace:
       at: .
@@ -9,7 +14,11 @@ steps:
       command: << include(scripts/set_stack_name.sh) >>
   - run:
       name: Install Pulumi CLI
+      environment:
+        WORKING_DIRECTORY: << parameters.working-directory >>
       command: << include(scripts/install_pulumi.sh) >>
   - run:
       name: Pulumi update
+      environment:
+        WORKING_DIRECTORY: << parameters.working-directory >>
       command: << include(scripts/pulumi_update.sh) >>

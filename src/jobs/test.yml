@@ -1,12 +1,13 @@
 description: >
   This job run the AWS Lambda Go function tests
 
-executor: go
+executor: golang
 
 parameters:
   minimum-coverage:
     type: string
     default: "85.00"
+
 steps:
   - checkout
   - test:

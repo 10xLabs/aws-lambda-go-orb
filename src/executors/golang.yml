@@ -1,0 +1,11 @@
+description: >
+  Default executor using Docker and Go.
+docker:
+  - image: "golang:<< parameters.tag >>"
+parameters:
+  tag:
+    default: "1.16-buster"
+    description: >
+      Pick a specific go image variant:
+      https://hub.docker.com/_/golang
+    type: string
