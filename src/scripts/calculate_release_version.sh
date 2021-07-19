@@ -1,7 +1,7 @@
 COMMIT_MESSAGE=$(git log -1 origin/master --pretty=format:%s)
-TOKENS=(${COMMIT_MESSAGE// / })
+TOKENS=("${COMMIT_MESSAGE// / }")
 OLD_VERSION="${TOKENS[1]}"
-TOKENS=(${OLD_VERSION//./ })
+TOKENS=("${OLD_VERSION//./ }")
 
 MAJOR="${TOKENS[0]:1}"
 MINOR="${TOKENS[1]}"

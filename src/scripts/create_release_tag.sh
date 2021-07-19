@@ -1,5 +1,5 @@
 COMMIT_SUBJECT=$(git log -1 origin/master --pretty=format:%s)
-TOKENS=(${COMMIT_SUBJECT// / })
+TOKENS=("${COMMIT_SUBJECT// / }")
 RELEASE_TAG="${TOKENS[1]}"
 
 echo "$RELEASE_TAG"

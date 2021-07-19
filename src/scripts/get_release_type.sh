@@ -1,9 +1,9 @@
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s)
-COMMIT_MESSAGES=(${PULL_REQUEST_BODY//\n/ })
+COMMIT_MESSAGES=("${PULL_REQUEST_BODY//\n/ }")
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
-    TOKENS=(${COMMIT_MESSAGE//:/ })
+    TOKENS=("${COMMIT_MESSAGE//:/ }")
     TYPE="${TOKENS[0]}"
     if [ "${TYPE:(-1)}" = "!" ]; then
         RELEASE_TYPE="MAJOR"
