@@ -1,0 +1,8 @@
+description: >
+  This release the code
+
+executor: node
+
+steps:
+  - checkout
+  - release

@@ -1,0 +1,8 @@
+description: >
+  This create or update the release pull request
+
+executor: node
+
+steps:
+  - checkout
+  - prepare-release

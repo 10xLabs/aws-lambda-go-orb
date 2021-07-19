@@ -1,7 +1,7 @@
 description: >
   This job build the AWS Lambda Go function executable
 
-executor: go
+executor: golang
 
 parameters:
   build-input-file:

@@ -1,0 +1,16 @@
+description: >
+  This create or update the release pull request
+
+steps:
+  - run:
+      name: Install Github CLI
+      command: << include(scripts/install_github_cli.sh) >>
+  - run:
+      name: Get release type
+      command: << include(scripts/get_release_type.sh) >>
+  - run:
+      name: Calculate release version
+      command: << include(scripts/calculate_release_version.sh) >>
+  - run:
+      name: Upsert release pull request
+      command: << include(scripts/upsert_release_pull_request.sh) >>
