@@ -1,8 +1,10 @@
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s)
+# shellcheck disable=SC2206
 COMMIT_MESSAGES=(${PULL_REQUEST_BODY//\n/ })
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
+    # shellcheck disable=SC2206
     TOKENS=(${COMMIT_MESSAGE//:/ })
     TYPE="${TOKENS[0]}"
     if [ "${TYPE:(-1)}" = "!" ]; then
