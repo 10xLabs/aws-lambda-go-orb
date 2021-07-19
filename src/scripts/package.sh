@@ -1,3 +1,6 @@
+apt-get update
+apt-get install -y zip
+
 # shellcheck disable=SC2153
 INPUT_PARENT_DIR="$(dirname "$INPUT_FILE")"
 INPUT_FILE_PATH="$(basename "$INPUT_FILE")"
