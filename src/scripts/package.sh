@@ -1,5 +1,5 @@
-apt-get update
-apt-get install -y zip
+apt-get update > /dev/null
+apt-get install -y zip > /dev/null
 
 # shellcheck disable=SC2153
 INPUT_PARENT_DIR="$(dirname "$INPUT_FILE")"
