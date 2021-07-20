@@ -1,1 +1,1 @@
-npm install -g @commitlint/cli @commitlint/config-conventional
+sudo npm install -g @commitlint/cli @commitlint/config-conventional

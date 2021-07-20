@@ -1,11 +1,11 @@
 description: >
   Default executor using Docker and Node.
 docker:
-  - image: 'node:<< parameters.tag >>'
+  - image: "cimg/node:<< parameters.tag >>"
 parameters:
   tag:
-    default: 14-buster
+    default: "14.17.3"
     description: >
       Pick a specific node image variant:
-      https://hub.docker.com/_/node
+      https://hub.docker.com/r/cimg/node
     type: string
