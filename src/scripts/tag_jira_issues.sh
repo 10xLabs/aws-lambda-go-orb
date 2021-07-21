@@ -7,6 +7,9 @@ for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
     echo "$COMMIT_MESSAGE"
     echo "@@"
+    COMMIT_MESSAGE="$COMMIT_MESSAGE [NA-2272]"
+    echo "$COMMIT_MESSAGE"
+    echo "@@"
     if [[ "$COMMIT_MESSAGE" =~ \[([A-Z]{2,3}-[0-9]+)\] ]]; then
         ISSUE_ID="${BASH_REMATCH[1]}"
         curl --request PUT \
