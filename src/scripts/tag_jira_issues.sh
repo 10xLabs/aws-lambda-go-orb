@@ -1,5 +1,5 @@
 RELEASE_TAG="v.1.1.1"
-COMMIT_BODY=$(git log -1 origin/master --pretty=format:%b)
+COMMIT_BODY=$(git log -1 origin/test-jira-tag-issue --pretty=format:%b)
 echo "$COMMIT_BODY"
 echo "--"
 # shellcheck disable=SC2206
