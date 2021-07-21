@@ -1,3 +1,4 @@
+RELEASE_DATE=$(date +%F)
 COMMIT_BODY=$(git log -1 origin/master --pretty=format:%b)
 # shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($COMMIT_BODY)
@@ -18,6 +19,9 @@ do
                         },
                         {
                           \"add\": \"$CIRCLE_PROJECT_REPONAME\"
+                        },
+                        {
+                          \"add\": \"$RELEASE_DATE\"
                         }
                       ]
                     }
