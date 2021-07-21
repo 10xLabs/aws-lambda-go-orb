@@ -1,3 +1,4 @@
+RELEASE_TAG="v.1.1.1"
 COMMIT_BODY=$(git log -1 origin/master --pretty=format:%b)
 # shellcheck disable=SC2206
 COMMIT_MESSAGES=(${COMMIT_BODY//\n/ })
