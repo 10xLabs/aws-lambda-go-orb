@@ -11,3 +11,6 @@ steps:
   - run:
       name: Create release
       command: << include(scripts/create_release.sh) >>
+  - run:
+      name: Tag JIRA issues
+      command: << include(scripts/tag_jira_issues.sh) >>
