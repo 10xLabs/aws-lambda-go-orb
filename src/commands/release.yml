@@ -2,15 +2,15 @@ description: >
   This release the code
 
 steps:
-  # - run:
-  #     name: Install Github CLI
-  #     command: << include(scripts/install_github_cli.sh) >>
-  # - run:
-  #     name: Create release tag
-  #     command: << include(scripts/create_release_tag.sh) >>
-  # - run:
-  #     name: Create release
-  #     command: << include(scripts/create_release.sh) >>
+  - run:
+      name: Install Github CLI
+      command: << include(scripts/install_github_cli.sh) >>
+  - run:
+      name: Create release tag
+      command: << include(scripts/create_release_tag.sh) >>
+  - run:
+      name: Create release
+      command: << include(scripts/create_release.sh) >>
   - run:
       name: Tag JIRA issues
       command: << include(scripts/tag_jira_issues.sh) >>
