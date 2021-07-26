@@ -5,4 +5,4 @@ executor: node
 
 steps:
   - checkout
-  - lint-commit
+  - lint-commits
