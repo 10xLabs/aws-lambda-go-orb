@@ -1,4 +1,6 @@
 COMMITS=$(git log "origin/$CIRCLE_BRANCH..origin/develop" --pretty=format:%s)
+echo "$CIRCLE_BRANCH"
+echo "@@"
 echo "$COMMITS"
 echo "@@"
 # shellcheck disable=SC2206
