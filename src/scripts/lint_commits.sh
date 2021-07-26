@@ -1,4 +1,4 @@
-COMMITS=$(git log origin/develop..origin/$CIRCLE_BRANCH --pretty=format:%s)
+COMMITS=$(git log "origin/develop..origin/$CIRCLE_BRANCH" --pretty=format:%s)
 echo "$CIRCLE_BRANCH"
 echo "@@"
 echo "$COMMITS"
