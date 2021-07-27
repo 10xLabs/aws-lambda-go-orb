@@ -4,7 +4,7 @@ echo "@@"
 echo "$COMMITS"
 echo "@@"
 # shellcheck disable=SC2206
-COMMIT_MESSAGES=(${COMMITS//\n/ })
+IFS=$'\n' COMMIT_MESSAGES=($COMMITS)
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
     echo ">>$COMMIT_MESSAGE<<"
