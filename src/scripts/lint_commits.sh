@@ -3,6 +3,7 @@ echo "$CIRCLE_BRANCH"
 echo "@@"
 echo "$COMMITS"
 echo "@@"
+# shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($COMMITS)
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
