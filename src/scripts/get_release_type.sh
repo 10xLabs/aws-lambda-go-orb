@@ -1,7 +1,7 @@
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s)
 # shellcheck disable=SC2206
-COMMIT_MESSAGES=(${PULL_REQUEST_BODY//\n/ })
+IFS=$'\n' COMMIT_MESSAGES=($PULL_REQUEST_BODY)
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
 do
     # shellcheck disable=SC2206
