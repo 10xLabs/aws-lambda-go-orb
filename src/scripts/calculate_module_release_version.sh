@@ -4,6 +4,7 @@ RELEASE_TAG="$MODULE_NAME/v1.0.0"
 
 if [[ $LAST_RELEASE_TAG =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
     LAST_VERSION=${LAST_RELEASE_TAG#"$MODULE_NAME/v"}
+    # shellcheck disable=SC2206
     TOKENS=(${LAST_VERSION//./ })
     
     MAJOR="${TOKENS[0]}"

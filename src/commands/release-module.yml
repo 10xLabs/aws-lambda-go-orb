@@ -32,4 +32,4 @@ steps:
     name: Create module release
     environment:
       MODULE_PATH: << parameters.path >>
-    command: << include(scripts/src/scripts/create_module_release.sh) >>
+    command: << include(scripts/create_module_release.sh) >>
