@@ -29,6 +29,9 @@ steps:
         MODULE_NAME: << parameters.module_name >>
       command: << include(scripts/create_module_release_tag.sh) >>
   - run:
+      name: Install Github CLI
+      command: << include(scripts/install_github_cli.sh) >>
+  - run:
       name: Create module release
       environment:
         MODULE_PATH: << parameters.module_path >>
