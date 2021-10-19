@@ -1,0 +1,10 @@
+description: >
+  This lint the code using the defined golangci-lint config
+
+steps:
+  - run:
+      name: Install golangci-lint
+      command: << include(scripts/install_golangci_lint.sh) >>
+  - run:
+      name: Lint code
+      command: << include(scripts/lint_code.sh) >>
