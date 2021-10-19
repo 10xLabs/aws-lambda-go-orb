@@ -1,0 +1,28 @@
+description: >
+  This command creates a module release
+
+parameters:
+  name:
+    type: string
+  path:
+    type: string
+
+steps:
+  - run:
+      name: Check module file changes
+      environment:
+        MODULE_PATH: << parameters.path >>
+      command: << include(scripts/check_module_file_changes.sh) >>
+  - run:
+      name: Get module release type
+      command: << include(scripts/get_module_release_type.sh) >>
+  - run:
+      name: Calculate module release version
+      environment:
+        MODULE_NAME: << parameters.name >>
+      command: << include(scripts/calculate_module_release_version.sh) >>
+  - run:
+    name: Create module release tag
+    environment:
+      MODULE_NAME: << parameters.name >>
+    command: << include(scripts/create_module_release_tag.sh) >>

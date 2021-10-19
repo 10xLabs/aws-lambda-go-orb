@@ -1,0 +1,16 @@
+description: >
+  This job creates a module release
+
+executor: golang
+
+parameters:
+  name:
+    type: string
+  path:
+    type: string
+
+steps:
+  - checkout
+  - release-module:
+      name: << parameters.name >>
+      path: << parameters.path >>
