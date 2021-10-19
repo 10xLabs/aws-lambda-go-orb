@@ -2,34 +2,34 @@ description: >
   This command creates a module release
 
 parameters:
-  name:
+  module_name:
     type: string
-  path:
+  module_path:
     type: string
 
 steps:
   - run:
       name: Check module file changes
       environment:
-        MODULE_PATH: << parameters.path >>
+        MODULE_PATH: << parameters.module_path >>
       command: << include(scripts/check_module_file_changes.sh) >>
   - run:
       name: Get module release type
       environment:
-        MODULE_PATH: << parameters.path >>
+        MODULE_PATH: << parameters.module_path >>
       command: << include(scripts/get_module_release_type.sh) >>
   - run:
       name: Calculate module release version
       environment:
-        MODULE_NAME: << parameters.name >>
+        MODULE_NAME: << parameters.module_name >>
       command: << include(scripts/calculate_module_release_version.sh) >>
   - run:
       name: Create module release tag
       environment:
-        MODULE_NAME: << parameters.name >>
+        MODULE_NAME: << parameters.module_name >>
       command: << include(scripts/create_module_release_tag.sh) >>
   - run:
       name: Create module release
       environment:
-        MODULE_PATH: << parameters.path >>
+        MODULE_PATH: << parameters.module_path >>
       command: << include(scripts/create_module_release.sh) >>
