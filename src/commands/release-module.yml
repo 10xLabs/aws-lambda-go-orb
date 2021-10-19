@@ -24,12 +24,12 @@ steps:
         MODULE_NAME: << parameters.name >>
       command: << include(scripts/calculate_module_release_version.sh) >>
   - run:
-    name: Create module release tag
-    environment:
-      MODULE_NAME: << parameters.name >>
-    command: << include(scripts/create_module_release_tag.sh) >>
+      name: Create module release tag
+      environment:
+        MODULE_NAME: << parameters.name >>
+      command: << include(scripts/create_module_release_tag.sh) >>
   - run:
-    name: Create module release
-    environment:
-      MODULE_PATH: << parameters.path >>
-    command: << include(scripts/create_module_release.sh) >>
+      name: Create module release
+      environment:
+        MODULE_PATH: << parameters.path >>
+      command: << include(scripts/create_module_release.sh) >>
