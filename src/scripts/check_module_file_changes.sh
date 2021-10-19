@@ -4,4 +4,6 @@ echo "...."
 echo "$FILES"
 echo "...."
 
-[[ -z "${FILES// }" ]] && circleci-agent step halt
+if [ -z "$FILES" ]; then
+    circleci-agent step halt
+fi
