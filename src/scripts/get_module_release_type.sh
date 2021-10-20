@@ -1,5 +1,5 @@
 RELEASE_TYPE="PATCH"
-PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s -- "$MODULE_PATH")
+PULL_REQUEST_BODY=$(git log HEAD~1..HEAD --pretty=format:%s -- "$MODULE_PATH")
 # shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($PULL_REQUEST_BODY)
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
