@@ -1,0 +1,29 @@
+description: >
+  This command creates module documentation
+
+parameters:
+  module_name:
+    type: string
+  module_path:
+    type: string
+  aggregate_name:
+    type: string
+
+steps:
+  - run:
+      name: Check module file changes
+      environment:
+        MODULE_PATH: << parameters.module_path >>
+      command: << include(scripts/check_module_file_changes.sh) >>
+  - run:
+      name: Generate documentation
+      environment:
+        MODULE_NAME: << parameters.module_name >>
+        MODULE_PATH: << parameters.module_path >>
+      command: << include(scripts/generate_documentation.sh) >>
+  - run:
+      name: Commit documentation
+      environment:
+        MODULE_NAME: << parameters.module_name >>
+        AGGREGATE_NAME: << parameters.aggregate_name >>
+      command: << include(scripts/commit_documentation.sh) >>
