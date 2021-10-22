@@ -7,6 +7,7 @@ cd nexdocs || exit
 # git checkout "$CIRCLE_BRANCH"
 git checkout develop
 
+mkdir -p "aggregates/$AGGREGATE_NAME"
 FILE_NAME=$(echo "$MODULE_NAME" | tr '[:upper:]' '[:lower:]')
 mv "$DOCUMENTATION_FILE" "./aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 
