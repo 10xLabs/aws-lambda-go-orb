@@ -7,6 +7,6 @@ go env
 
 FILE_NAME=$(echo "$MODULE_NAME" | tr '[:upper:]' '[:lower:]')
 mkdir docs
-gomarkdoc "$MODULE_PATH" -t func= > "docs/$FILE_NAME.md"
+gomarkdoc "./$MODULE_PATH" -t func= > "docs/$FILE_NAME.md"
 
 ls -al docs
