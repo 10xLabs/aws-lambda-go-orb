@@ -8,9 +8,12 @@ parameters:
     type: string
   module_path:
     type: string
+  aggregate_name:
+    type: string
 
 steps:
   - checkout
   - document-module:
       module_name: << parameters.module_name >>
       module_path: << parameters.module_path >>
+      aggregate_name: << parameters.aggregate_name >>
