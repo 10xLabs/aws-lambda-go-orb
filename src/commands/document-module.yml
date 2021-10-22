@@ -16,6 +16,7 @@ steps:
   - run:
       name: Generate documentation
       environment:
+        MODULE_NAME: << parameters.module_name >>
         MODULE_PATH: << parameters.module_path >>
       command: << include(scripts/generate_documentation.sh) >>
   # - run:
