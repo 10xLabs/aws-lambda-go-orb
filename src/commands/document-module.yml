@@ -19,6 +19,9 @@ steps:
         MODULE_NAME: << parameters.module_name >>
         MODULE_PATH: << parameters.module_path >>
       command: << include(scripts/generate_documentation.sh) >>
-  # - run:
-  #   name: Install AWS CLI
-  #   command: << include(scripts/install_aws_cli.sh) >>
+  - run:
+    name: Install AWS CLI
+    command: << include(scripts/install_aws_cli.sh) >>
+  - run:
+    name: Copy documentation
+    command: << include(scripts/copy_documentation.sh) >>
