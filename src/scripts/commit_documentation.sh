@@ -9,8 +9,8 @@ git checkout develop
 
 mkdir -p "aggregates/$AGGREGATE_NAME"
 FILE_NAME=$(echo "$MODULE_NAME" | tr '[:upper:]' '[:lower:]')
-mv "$DOCUMENTATION_FILE" "./aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
+mv "$DOCUMENTATION_FILE" "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 
-git add "./aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
+git add "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 git commit -m "docs: update $AGGREGATE_NAME module $MODULE_NAME"
 git push
