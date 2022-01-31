@@ -10,7 +10,7 @@ do
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
-        IFS=$'\n' tokens=($version)
+        IFS=$'.' tokens=($version)
         
         major="${tokens[0]}"
         minor="${tokens[1]}"
