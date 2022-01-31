@@ -1,4 +1,3 @@
-#!/bin/bash
 FILES=$(git diff --name-only HEAD~1..HEAD "$MODULE_PATH")
 
 if [ -z "$FILES" ]; then

@@ -1,4 +1,3 @@
-#!/bin/bash
 COMMITS=$(git log HEAD~1..HEAD --pretty=format:%s -- "$MODULE_PATH")
 
 if [ "$CIRCLE_BRANCH" = "master" ]; then

@@ -1,4 +1,3 @@
-#!/bin/bash
 cd /tmp || exit
 git config --global user.name "Circle CI"
 git config --global user.email "circleci@nexbus.com"

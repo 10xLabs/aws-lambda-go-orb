@@ -1,4 +1,3 @@
-#!/bin/bash
 COMMIT_SUBJECT=$(git log -1 origin/master --pretty=format:%s)
 # shellcheck disable=SC2206
 TOKENS=(${COMMIT_SUBJECT// / })

@@ -1,4 +1,3 @@
-#!/bin/bash
 COMMITS=$(git log "origin/develop..origin/$CIRCLE_BRANCH" --pretty=format:%s)
 # shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($COMMITS)
