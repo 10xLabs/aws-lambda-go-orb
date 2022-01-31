@@ -15,6 +15,8 @@ pre_version="v1.0.0"
 echo "#3"
 data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
 echo "#4"
+echo "$MODULE_NAME"
+echo "$data"
 IFS=$'\n' read -rd '' -a tags <<<"$data"
 echo "#5"
 for tag in "${tags[@]}"
