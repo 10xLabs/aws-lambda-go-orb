@@ -4,10 +4,8 @@ if [ "$CIRCLE_BRANCH" = "master" ]; then
     PRE_RELEASE="false"
 fi
 
-RELEASE_TAG="$MODULE_NAME/v1.0.0"
-if [ "$PRE_RELEASE" = "true" ]; then
-    RELEASE_TAG="$RELEASE_TAG-pre.0"
-fi
+RELEASE_TAG=""
+ZERO_VERSION="$MODULE_NAME/v0.0.0"
 
 pre_number="0"
 pre_version="v1.0.0"
@@ -15,6 +13,7 @@ pre_version="v1.0.0"
 data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
 # shellcheck disable=SC2206
 IFS=$'\n' tags=($data)
+tags+=("$ZERO_VERSION")
 
 for tag in "${tags[@]}"
 do
@@ -26,6 +25,10 @@ do
         major="${tokens[0]}"
         minor="${tokens[1]}"
         patch="${tokens[2]}"
+        
+        if [ "$tag" = "$ZERO_VERSION" ]; then
+            RELEASE_TYPE="MAJOR"
+        fi
         
         case "$RELEASE_TYPE" in
             PATCH)
@@ -67,4 +70,6 @@ do
     fi
 done
 
+echo "$RELEASE_TAG"
+circleci-agent step halt
 echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"
