@@ -25,6 +25,10 @@ do
         major="${tokens[0]}"
         minor="${tokens[1]}"
         patch="${tokens[2]}"
+
+        echo "major: $major"
+        echo "minor: $minor"
+        echo "patch: $patch"
         
         if [ "$tag" = "$ZERO_VERSION" ]; then
             RELEASE_TYPE="MAJOR"
