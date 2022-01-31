@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 RELEASE_TAG="v1.0.0"
 
 data=$(git tag --list --sort "-version:refname")

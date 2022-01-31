@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 echo "#0"
 PRE_RELEASE="true"
 if [ "$CIRCLE_BRANCH" = "master" ]; then
