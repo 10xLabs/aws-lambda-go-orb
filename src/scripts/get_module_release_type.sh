@@ -1,3 +1,4 @@
+#!/bin/bash
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log HEAD~1..HEAD --pretty=format:%s -- "$MODULE_PATH")
 # shellcheck disable=SC2206

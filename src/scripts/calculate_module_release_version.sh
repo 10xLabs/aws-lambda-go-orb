@@ -1,34 +1,66 @@
-LAST_RELEASE_TAG=$(git tag --list "$MODULE_NAME/*" --sort "version:refname" | tail -1)
+#!/bin/bash
+PRE_RELEASE="true"
+if [ "$CIRCLE_BRANCH" = "master" ]; then
+    PRE_RELEASE="false"
+fi
 
 RELEASE_TAG="$MODULE_NAME/v1.0.0"
-
-if [[ $LAST_RELEASE_TAG =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
-    LAST_VERSION=${LAST_RELEASE_TAG#"$MODULE_NAME/v"}
-    # shellcheck disable=SC2206
-    TOKENS=(${LAST_VERSION//./ })
-    
-    MAJOR="${TOKENS[0]}"
-    MINOR="${TOKENS[1]}"
-    PATCH="${TOKENS[2]}"
-    
-    case "$RELEASE_TYPE" in
-        PATCH)
-            PATCH=$((PATCH+1))
-        ;;
-        
-        MINOR)
-            MINOR=$((MINOR+1))
-            PATCH="0"
-        ;;
-        
-        MAJOR)
-            MAJOR=$((MAJOR+1))
-            MINOR="0"
-            PATCH="0"
-        ;;
-    esac
-    
-    RELEASE_TAG="$MODULE_NAME/v$MAJOR.$MINOR.$PATCH"
+if [ "$PRE_RELEASE" = "true" ]; then
+    RELEASE_TAG="$RELEASE_TAG-pre.0"
 fi
+
+pre_number="0"
+pre_version="v1.0.0"
+
+data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
+IFS=$'\n' read -rd '' -a tags <<<"$data"
+for tag in "${tags[@]}"
+do
+    if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+        version=${tag#"$MODULE_NAME/v"}
+        IFS=$'.' read -rd '' -a tokens <<<"$version"
+
+        major="${tokens[0]}"
+        minor="${tokens[1]}"
+        patch="${tokens[2]}"
+
+        case "$RELEASE_TYPE" in
+            PATCH)
+                patch=$((patch+1))
+            ;;
+
+            MINOR)
+                minor=$((minor+1))
+                patch="0"
+            ;;
+
+            MAJOR)
+                major=$((major+1))
+                minor="0"
+                patch="0"
+            ;;
+        esac
+
+        version="$major.$minor.$patch"
+        if [ "$PRE_RELEASE" = "true" ]; then
+            if [ "$version" = "$pre_version" ]; then
+                pre_number=$((pre_number+1))
+            else
+                pre_number="0"
+            fi
+            version="$version-pre.$pre_number"
+        fi
+        RELEASE_TAG="$MODULE_NAME/v$version"
+
+        break
+    fi
+
+    if [[ $pre_version == "v1.0.0" && $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+-pre.[0-9]+$ ]]; then
+        pre_version=${tag#"$MODULE_NAME/v"}
+        IFS=$'.' read -rd '' -a tokens <<<"$pre_version"
+        pre_number="${tokens[3]}"
+        pre_version=${pre_version%-pre*}
+    fi
+done
 
 echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"

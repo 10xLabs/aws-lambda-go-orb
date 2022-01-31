@@ -1,36 +1,39 @@
-COMMIT_MESSAGE=$(git log -1 origin/master --pretty=format:%s)
-# shellcheck disable=SC2206
-TOKENS=(${COMMIT_MESSAGE// / })
-OLD_VERSION="${TOKENS[1]}"
-# shellcheck disable=SC2206
-TOKENS=(${OLD_VERSION//./ })
+#!/bin/bash
+RELEASE_TAG="v1.0.0"
 
-MAJOR="${TOKENS[0]:1}"
-MINOR="${TOKENS[1]}"
-PATCH="${TOKENS[2]}"
+data=$(git tag --list --sort "-version:refname")
+IFS=$'\n' read -rd '' -a tags <<<"$data"
+for tag in "${tags[@]}"
+do
+    if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+        version=${tag#"$MODULE_NAME/v"}
+        IFS=$'.' read -rd '' -a tokens <<<"$version"
 
-case "$RELEASE_TYPE" in
+        major="${tokens[0]}"
+        minor="${tokens[1]}"
+        patch="${tokens[2]}"
 
-    PATCH)
-    PATCH=$((PATCH+1))
-    ;;
+        case "$RELEASE_TYPE" in
+            PATCH)
+                patch=$((patch+1))
+            ;;
 
-    MINOR)
-    MINOR=$((MINOR+1))
-    PATCH="0"
-    ;;
+            MINOR)
+                minor=$((minor+1))
+                patch="0"
+            ;;
 
-    MAJOR)
-    MAJOR=$((MAJOR+1))
-    MINOR="0"
-    PATCH="0"
-    ;;
-esac
+            MAJOR)
+                major=$((major+1))
+                minor="0"
+                patch="0"
+            ;;
+        esac
 
-NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+        RELEASE_TAG="$MODULE_NAME/v$major.$minor.$patch"
+        
+        break
+    fi
+done
 
-echo "RELEASE TYPE: $RELEASE_TYPE"
-echo "OLD VERSION: $OLD_VERSION"
-echo "NEW VERSION: $NEW_VERSION"
-
-echo "export NEW_VERSION=$NEW_VERSION" >> "$BASH_ENV"
+echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"

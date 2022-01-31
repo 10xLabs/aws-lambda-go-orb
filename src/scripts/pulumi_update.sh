@@ -1,3 +1,4 @@
+#!/bin/bash
 if pulumi stack ls --cwd "$WORKING_DIRECTORY" | grep -q ^"$STACK_NAME"; then
 echo "stack exists"
 else
