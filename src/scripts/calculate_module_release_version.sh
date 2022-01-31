@@ -17,7 +17,9 @@ data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
 echo "#4"
 echo "$MODULE_NAME"
 echo "|$data|"
-IFS=$'\n' read -rd '' -a tags <<<"$data"
+# shellcheck disable=SC2206
+IFS=$'\n' tags=($data)
+# IFS=$'\n' read -rd '' -a tags <<<"$data"
 echo "#5"
 echo "#5"
 echo "#5"
