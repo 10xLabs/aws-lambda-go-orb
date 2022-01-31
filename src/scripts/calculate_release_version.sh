@@ -2,34 +2,37 @@
 RELEASE_TAG="v1.0.0"
 
 data=$(git tag --list --sort "-version:refname")
-IFS=$'\n' read -rd '' -a tags <<<"$data"
+# shellcheck disable=SC2206
+IFS=$'\n' tags=($data)
+
 for tag in "${tags[@]}"
 do
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         version=${tag#"$MODULE_NAME/v"}
-        IFS=$'.' read -rd '' -a tokens <<<"$version"
-
+        # shellcheck disable=SC2206
+        IFS=$'\n' tokens=($version)
+        
         major="${tokens[0]}"
         minor="${tokens[1]}"
         patch="${tokens[2]}"
-
+        
         case "$RELEASE_TYPE" in
             PATCH)
                 patch=$((patch+1))
             ;;
-
+            
             MINOR)
                 minor=$((minor+1))
                 patch="0"
             ;;
-
+            
             MAJOR)
                 major=$((major+1))
                 minor="0"
                 patch="0"
             ;;
         esac
-
+        
         RELEASE_TAG="$MODULE_NAME/v$major.$minor.$patch"
         
         break
