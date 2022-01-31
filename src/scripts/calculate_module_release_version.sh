@@ -14,6 +14,12 @@ pre_number="0"
 pre_version="v1.0.0"
 echo "#3"
 data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
+if [ -z "$data" ]
+then
+      echo "\$data is empty"
+else
+      echo "\$data is NOT empty"
+fi
 echo "#4"
 echo "$MODULE_NAME"
 echo "$data"
