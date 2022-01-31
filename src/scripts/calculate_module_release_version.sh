@@ -1,21 +1,26 @@
 #!/bin/bash
+echo "#0"
 PRE_RELEASE="true"
 if [ "$CIRCLE_BRANCH" = "master" ]; then
     PRE_RELEASE="false"
 fi
-
+echo "#1"
 RELEASE_TAG="$MODULE_NAME/v1.0.0"
 if [ "$PRE_RELEASE" = "true" ]; then
     RELEASE_TAG="$RELEASE_TAG-pre.0"
 fi
-
+echo "#2"
 pre_number="0"
 pre_version="v1.0.0"
-
+echo "#3"
 data=$(git tag --list "$MODULE_NAME/*" --sort "-version:refname")
+echo "#4"
 IFS=$'\n' read -rd '' -a tags <<<"$data"
+echo "#5"
 for tag in "${tags[@]}"
 do
+    echo "#6"
+    echo "$tag"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         version=${tag#"$MODULE_NAME/v"}
         IFS=$'.' read -rd '' -a tokens <<<"$version"
