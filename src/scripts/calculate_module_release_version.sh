@@ -25,10 +25,6 @@ do
         major="${tokens[0]}"
         minor="${tokens[1]}"
         patch="${tokens[2]}"
-
-        echo "major: $major"
-        echo "minor: $minor"
-        echo "patch: $patch"
         
         if [ "$tag" = "$ZERO_VERSION" ]; then
             RELEASE_TYPE="MAJOR"
@@ -74,6 +70,4 @@ do
     fi
 done
 
-echo "$RELEASE_TAG"
-circleci-agent step halt
 echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"
