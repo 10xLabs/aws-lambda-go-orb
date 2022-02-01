@@ -24,6 +24,7 @@ echo "................................................"
 if [ -z "$FILES" ]; then
     echo "ENTRO AQUI"
     circleci-agent step halt
+    exit 0
 fi
 
 git commit -m "docs: update $AGGREGATE_NAME module $MODULE_NAME"
