@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 sudo apt-get update > /dev/null
 sudo apt-get install -y bc > /dev/null
 CURRENT_COVERAGE=$(GOFLAGS='-mod=vendor' go tool cover -func cover.out | grep total | tail -n 1 |awk '{print substr($3, 1, length($3)-1)}')

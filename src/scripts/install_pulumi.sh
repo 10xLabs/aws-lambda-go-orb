@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 if [ "$VERSION" == "latest" ]; then
     curl -L https://get.pulumi.com/ | bash -s
 else

@@ -1,1 +1,2 @@
+# shellcheck disable=SC2148
 sudo npm install -g @commitlint/cli @commitlint/config-conventional

@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s)
 # shellcheck disable=SC2206

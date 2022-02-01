@@ -1,6 +1,7 @@
+# shellcheck disable=SC2148
 cd /tmp || exit
 git config --global user.name "Circle CI"
-git config --global user.email "circleci@nexbus.com"
+git config --global user.email "circleci@nexbus.com.mx"
 git clone "https://$GITHUB_USER:$GITHUB_PAT@github.com/10xLabs/nexdocs.git"
 
 cd nexdocs || exit

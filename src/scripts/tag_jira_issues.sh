@@ -1,3 +1,4 @@
+# shellcheck disable=SC2148
 RELEASE_DATE=$(date +%F)
 COMMIT_BODY=$(git log -1 origin/master --pretty=format:%b)
 # shellcheck disable=SC2206

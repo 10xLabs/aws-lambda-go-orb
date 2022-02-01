@@ -1,2 +1,3 @@
+# shellcheck disable=SC2148
 mkdir -p "$RESULTS_FOLDER"
 GOFLAGS='-mod=vendor' gotestsum --junitfile "$RESULTS_FOLDER/unit-tests.xml" -- -coverprofile=cover.out -v ./...
