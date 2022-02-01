@@ -9,10 +9,10 @@ IFS=$'\n' tags=($data)
 
 for tag in "${tags[@]}"
 do
-    if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+    if [[ $tag =~ ^v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         echo "Found tag: $tag"
         echo "$RELEASE_TYPE"
-        version=${tag#"$MODULE_NAME/v"}
+        version=${tag#"v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($version)
         
@@ -37,7 +37,7 @@ do
             ;;
         esac
         
-        RELEASE_TAG="$MODULE_NAME/v$major.$minor.$patch"
+        RELEASE_TAG="v$major.$minor.$patch"
         
         break
     fi
