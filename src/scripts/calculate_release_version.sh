@@ -2,12 +2,16 @@
 RELEASE_TAG="v1.0.0"
 
 data=$(git tag --list --sort "-version:refname")
+echo "$data"
+echo "----------------------------------------"
 # shellcheck disable=SC2206
 IFS=$'\n' tags=($data)
 
 for tag in "${tags[@]}"
 do
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+        echo "Found tag: $tag"
+        echo "$RELEASE_TYPE"
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($version)
