@@ -1,4 +1,10 @@
 # shellcheck disable=SC2148
+# shellcheck disable=SC2046
+if [ $(git tag -l "$RELEASE_TAG") ]; then
+    circleci-agent step halt
+    exit 0
+fi
+
 COMMIT_SUBJECT=$(git log -1 origin/master --pretty=format:%s)
 # shellcheck disable=SC2206
 TOKENS=(${COMMIT_SUBJECT// / })
