@@ -13,7 +13,14 @@ mv "$DOCUMENTATION_FILE" "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 
 git add "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 
+STATUS=$(git status)
+echo "$STATUS"
+echo "$STATUS" | grep "nothing to commit"
+echo "................................................"
+
 FILES=$(git diff --name-only)
+echo "$FILES"
+echo "................................................"
 if [ -z "$FILES" ]; then
     circleci-agent step halt
 fi
