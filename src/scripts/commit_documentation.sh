@@ -10,19 +10,10 @@ git checkout "$CIRCLE_BRANCH"
 mkdir -p "aggregates/$AGGREGATE_NAME"
 FILE_NAME=$(echo "$MODULE_NAME" | tr '[:upper:]' '[:lower:]')
 mv "$DOCUMENTATION_FILE" "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
-
 git add "aggregates/$AGGREGATE_NAME/$FILE_NAME.md"
 
-STATUS=$(git status)
-echo "$STATUS"
-echo "$STATUS" | grep "nothing to commit"
-echo "................................................"
-
 FILES=$(git diff --name-only)
-echo "$FILES"
-echo "................................................"
 if [ -z "$FILES" ]; then
-    echo "ENTRO AQUI"
     circleci-agent step halt
     exit 0
 fi
