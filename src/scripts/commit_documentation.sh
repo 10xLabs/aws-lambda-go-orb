@@ -22,6 +22,7 @@ FILES=$(git diff --name-only)
 echo "$FILES"
 echo "................................................"
 if [ -z "$FILES" ]; then
+    echo "ENTRO AQUI"
     circleci-agent step halt
 fi
 
