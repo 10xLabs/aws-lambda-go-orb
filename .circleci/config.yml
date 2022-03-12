@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   # Replace this with your own!
   aws-lambda-go: nexbus/aws-lambda-go@<< pipeline.parameters.dev-orb-version >>
-  orb-tools: circleci/orb-tools@10.0.4
+  orb-tools: circleci/orb-tools@10.1.0
   bats: circleci/bats@1.0.0
   shellcheck: circleci/shellcheck@3.1.0
 
