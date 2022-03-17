@@ -1,5 +1,6 @@
 # shellcheck disable=SC2148
 # shellcheck disable=SC2046
+echo "$RELEASE_TAG"
 if [ $(git tag -l "$RELEASE_TAG") ]; then
     circleci-agent step halt
     exit 0
