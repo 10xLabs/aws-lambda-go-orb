@@ -10,6 +10,9 @@ parameters:
   build-output-file:
     type: string
     default: main
+  build-architecture:
+    type: string
+    default: amd64
   package-output-file:
     type: string
     default: deploy/lambda.zip
@@ -19,4 +22,5 @@ steps:
   - build:
       build-input-file: << parameters.build-input-file >>
       build-output-file: << parameters.build-output-file >>
+      build-architecture: << parameters.build-architecture >>
       package-output-file: << parameters.package-output-file >>
