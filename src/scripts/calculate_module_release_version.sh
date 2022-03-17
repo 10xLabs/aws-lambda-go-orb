@@ -17,6 +17,7 @@ tags+=("$ZERO_VERSION")
 
 for tag in "${tags[@]}"
 do
+    echo "tag: $tag"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
