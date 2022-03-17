@@ -18,6 +18,7 @@ tags+=("$ZERO_VERSION")
 for tag in "${tags[@]}"
 do
     echo "tag: $tag"
+    echo "pre_version: $pre_version"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
@@ -70,5 +71,7 @@ do
         pre_version=${pre_version%-pre*}
     fi
 done
+
+echo "RELEASE_TAG: $RELEASE_TAG"
 
 echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"
