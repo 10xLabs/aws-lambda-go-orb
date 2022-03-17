@@ -21,7 +21,7 @@ do
     echo "pre_version: $pre_version"
     echo "pre_number: $pre_number"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
-        echo "ENTRO AQUI"
+        echo "HERE TAG"
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($version)
@@ -66,10 +66,11 @@ do
     fi
     
     if [[ $pre_version == "v1.0.0" && $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+-pre.[0-9]+$ ]]; then
+        echo "HERE PRE TAG"
         pre_version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
-        IFS=$'\n' tokens=($pre_version)
-        pre_number="${tokens[3]}"
+        IFS=$'.' tokens=($tag)
+        pre_number="${tokens[-1]}"
         pre_version=${pre_version%-pre*}
     fi
 done
