@@ -8,11 +8,11 @@ parameters:
     type: string
 
 steps:
-  - run:
-      name: Check module file changes
-      environment:
-        MODULE_PATH: << parameters.module_path >>
-      command: << include(scripts/check_module_file_changes.sh) >>
+  # - run:
+  #     name: Check module file changes
+  #     environment:
+  #       MODULE_PATH: << parameters.module_path >>
+  #     command: << include(scripts/check_module_file_changes.sh) >>
   - run:
       name: Get module release type
       environment:
