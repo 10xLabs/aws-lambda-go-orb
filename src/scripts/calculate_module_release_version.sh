@@ -19,7 +19,9 @@ for tag in "${tags[@]}"
 do
     echo "tag: $tag"
     echo "pre_version: $pre_version"
+    echo "pre_number: $pre_number"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+        echo "ENTRO AQUI"
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($version)
