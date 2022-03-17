@@ -17,11 +17,7 @@ tags+=("$ZERO_VERSION")
 
 for tag in "${tags[@]}"
 do
-    echo "tag: $tag"
-    echo "pre_version: $pre_version"
-    echo "pre_number: $pre_number"
     if [[ $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+$ ]]; then
-        echo "HERE TAG"
         version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($version)
@@ -66,7 +62,6 @@ do
     fi
     
     if [[ $pre_version == "v1.0.0" && $tag =~ ^$MODULE_NAME/v[0-9]+.[0-9]+.[0-9]+-pre.[0-9]+$ ]]; then
-        echo "HERE PRE TAG"
         pre_version=${tag#"$MODULE_NAME/v"}
         # shellcheck disable=SC2206
         IFS=$'.' tokens=($tag)
@@ -76,5 +71,4 @@ do
 done
 
 echo "RELEASE_TAG: $RELEASE_TAG"
-
 echo "export RELEASE_TAG=$RELEASE_TAG" >> "$BASH_ENV"
