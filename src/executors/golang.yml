@@ -1,10 +1,9 @@
 description: >
   Default executor using Docker and Go.
 docker:
-  - image: "cimg/go:<< parameters.tag >>"
+  - image: "nexbus/go-pulumi:latest"
 parameters:
   tag:
-    default: "1.18"
     description: >
       Pick a specific go image variant:
       https://hub.docker.com/r/cimg/go

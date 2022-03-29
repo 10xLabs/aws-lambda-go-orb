@@ -16,7 +16,7 @@ steps:
       name: Install Pulumi CLI
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
-      command: << include(scripts/install_pulumi.sh) >>
+      command: << include(scripts/install_pulumi_deps.sh) >>
   - run:
       name: Pulumi update
       environment:
