@@ -18,6 +18,7 @@ parameters:
     default: deploy/lambda.zip
 
 steps:
+  - run: go version
   - checkout
   - build:
       build-input-file: << parameters.build-input-file >>
