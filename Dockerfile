@@ -1,5 +1,12 @@
 FROM cimg/go:1.18-node
 
+USER circleci
+
+RUN mkdir /home/circleci/cli
+RUN chown -R circleci:circleci /home/circleci/cli
+
+WORKDIR /home/circleci/cli
+
 RUN sudo npm install -g @commitlint/cli @commitlint/config-conventional
 
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
