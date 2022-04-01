@@ -21,4 +21,3 @@ RUN set -e \
   \
   && sudo apt install -y gh > /dev/null
 
-RUN gh version

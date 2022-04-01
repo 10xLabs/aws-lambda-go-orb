@@ -12,6 +12,7 @@ steps:
   - run:
       name: Set stack name
       command: << include(scripts/set_stack_name.sh) >>
+  - run: pulumi version
   - run:
       name: Install Pulumi CLI
       environment:
