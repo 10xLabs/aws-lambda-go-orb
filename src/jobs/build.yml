@@ -19,6 +19,7 @@ parameters:
 
 steps:
   - run: go version
+  - run: pulumi version
   - checkout
   - build:
       build-input-file: << parameters.build-input-file >>
