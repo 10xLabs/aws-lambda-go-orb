@@ -18,9 +18,6 @@ parameters:
     default: deploy/lambda.zip
 
 steps:
-  - run: echo $PATH
-  - run: go version
-  - run: pulumi version
   - checkout
   - build:
       build-input-file: << parameters.build-input-file >>
