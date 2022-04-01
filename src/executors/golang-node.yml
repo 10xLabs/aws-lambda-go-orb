@@ -1,4 +1,4 @@
 description: >
   Default executor using Docker and Go.
 docker:
-  - image: "cimg/go:1.18"
+  - image: "nexbus/go-pulumi:15"

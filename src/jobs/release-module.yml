@@ -1,7 +1,7 @@
 description: >
   This job creates a module release
 
-executor: golang
+executor: golang-node 
 
 parameters:
   module_name:

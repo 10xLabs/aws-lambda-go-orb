@@ -1,7 +1,7 @@
 description: >
   This lint commit using conventional commits format
 
-executor: golang
+executor: golang-node 
 
 steps:
   - checkout
