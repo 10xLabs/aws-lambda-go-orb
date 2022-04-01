@@ -4,7 +4,7 @@ USER circleci
 
 RUN sudo npm install -g @commitlint/cli @commitlint/config-conventional
 
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
+RUN cd /home/circleci && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.41.1
 
 RUN curl -fsSL https://get.pulumi.com | sh \
   && echo "export PATH=${HOME}/.pulumi/bin:$PATH" >> ${HOME}/.profile
