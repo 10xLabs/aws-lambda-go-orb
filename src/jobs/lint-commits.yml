@@ -1,7 +1,7 @@
 description: >
   This lint commit using conventional commits format
 
-executor: golang-node
+executor: go-pulumi-lint-gh
 
 steps:
   - checkout
