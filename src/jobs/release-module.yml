@@ -1,7 +1,7 @@
 description: >
   This job creates a module release
 
-executor: golang
+executor: go-pulumi-lint-gh
 
 parameters:
   module_name:

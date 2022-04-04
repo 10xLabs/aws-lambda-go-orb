@@ -1,7 +1,7 @@
 description: >
   This job run the AWS Lambda Go function tests
 
-executor: node
+executor: go-pulumi-lint-gh
 
 parameters:
   working-directory:

@@ -1,7 +1,7 @@
 description: >
   This job creates module documentation
 
-executor: golang
+executor: go-pulumi-lint-gh
 
 parameters:
   module_name:
