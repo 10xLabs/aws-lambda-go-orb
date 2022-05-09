@@ -5,7 +5,7 @@ orbs:
   aws-lambda-go: nexbus/aws-lambda-go@<< pipeline.parameters.dev-orb-version >>
   orb-tools: circleci/orb-tools@11.1.3
   bats: circleci/bats@1.0.0
-  shellcheck: circleci/shellcheck@3.1.0
+  shellcheck: circleci/shellcheck@3.1.1
 
 # Pipeline Parameters
 ## These parameters are used internally by orb-tools. Skip to the Jobs section.
