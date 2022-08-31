@@ -12,3 +12,6 @@ steps:
   - checkout
   - deploy:
     working-directory: << parameters.working-directory >>
+  - notify:
+      event: fail
+      template: basic_fail_1

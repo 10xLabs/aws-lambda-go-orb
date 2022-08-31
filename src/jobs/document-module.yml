@@ -17,3 +17,6 @@ steps:
       module_name: << parameters.module_name >>
       module_path: << parameters.module_path >>
       aggregate_name: << parameters.aggregate_name >>
+  - notify:
+      event: fail
+      template: basic_fail_1

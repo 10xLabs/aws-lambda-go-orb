@@ -6,3 +6,6 @@ executor: go-pulumi-lint-gh
 steps:
   - checkout
   - lint-code
+  - notify:
+      event: fail
+      template: basic_fail_1

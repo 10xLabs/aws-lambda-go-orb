@@ -12,3 +12,6 @@ steps:
   - checkout
   - test:
       minimum-coverage: << parameters.minimum-coverage >>
+  - notify:
+      event: fail
+      template: basic_fail_1

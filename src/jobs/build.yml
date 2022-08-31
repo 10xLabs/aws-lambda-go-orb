@@ -24,3 +24,6 @@ steps:
       build-output-file: << parameters.build-output-file >>
       build-architecture: << parameters.build-architecture >>
       package-output-file: << parameters.package-output-file >>
+  - notify:
+      event: fail
+      template: basic_fail_1

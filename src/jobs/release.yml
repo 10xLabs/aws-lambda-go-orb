@@ -6,3 +6,6 @@ executor: go-pulumi-lint-gh
 steps:
   - checkout
   - release
+  - notify:
+      event: fail
+      template: basic_fail_1

@@ -7,3 +7,6 @@ steps:
   - checkout
   - lint-commits
   - lint-code
+  - notify:
+      event: fail
+      template: basic_fail_1
