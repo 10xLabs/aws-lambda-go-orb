@@ -3,7 +3,7 @@ setup: true
 orbs:
   # Replace this with your own!
   aws-lambda-go: nexbus/aws-lambda-go@<< pipeline.parameters.dev-orb-version >>
-  orb-tools: circleci/orb-tools@11.2.0
+  orb-tools: circleci/orb-tools@11.3.0
   bats: circleci/bats@1.0.0
   shellcheck: circleci/shellcheck@3.1.0
 
