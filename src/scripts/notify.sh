@@ -179,6 +179,12 @@ SetupLogs() {
     fi
 }
 
+# NOTE: This will be configurable in the future.
+if [ "$CIRCLE_BRANCH" != "develop" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+    echo "Skipping notifications for non-master branches"
+    exit 0
+fi
+
 # Will not run if sourced from another script.
 # This is done so this script may be tested.
 ORB_TEST_ENV="bats-core"

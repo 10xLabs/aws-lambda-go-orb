@@ -14,7 +14,7 @@ workflows:
             tags:
               only: /.*/
       - orb-tools/publish:
-          orb-name: circleci/orb-tools
+          orb-name: nexbus/aws-lambda-go
           vcs-type: <<pipeline.project.type>>
           pub-type: production
           requires:
