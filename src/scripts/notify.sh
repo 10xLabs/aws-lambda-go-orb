@@ -181,7 +181,8 @@ SetupLogs() {
 
 # NOTE: This will be configurable in the future.
 if [ "$CIRCLE_BRANCH" != "develop" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
-   exit 0
+    echo "Skipping notifications for non-master branches"
+    exit 0
 fi
 
 # Will not run if sourced from another script.
