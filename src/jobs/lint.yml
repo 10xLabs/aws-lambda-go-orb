@@ -1,11 +1,12 @@
 description: >
-  This lint commit using conventional commits format
+  This lint the code using the defined golangci-lint config
 
 executor: go-pulumi-lint-gh
 
 steps:
   - checkout
   - lint-commits
+  - lint-code
   - notify:
       event: fail
       template: basic_fail_1

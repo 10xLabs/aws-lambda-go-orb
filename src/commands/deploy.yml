@@ -12,11 +12,12 @@ steps:
   - run:
       name: Set stack name
       command: << include(scripts/set_stack_name.sh) >>
+  - run: pulumi version
   - run:
-      name: Install Pulumi CLI
+      name: Install Pulumi Dependencies
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
-      command: << include(scripts/install_pulumi.sh) >>
+      command: << include(scripts/install_pulumi_deps.sh) >>
   - run:
       name: Pulumi update
       environment:

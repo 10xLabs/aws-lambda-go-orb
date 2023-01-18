@@ -1,9 +1,8 @@
 version: 2.1
-
+setup: true 
 orbs:
   # Replace this with your own!
-  aws-lambda-go: nexbus/aws-lambda-go@<< pipeline.parameters.dev-orb-version >>
-  orb-tools: circleci/orb-tools@10.1.0
+  orb-tools: circleci/orb-tools@11.2.0
   bats: circleci/bats@1.0.0
   shellcheck: circleci/shellcheck@3.1.0
 
@@ -36,56 +35,50 @@ workflows:
   test-pack:
     unless: << pipeline.parameters.run-integration-tests >>
     jobs:
-      - orb-tools/lint # Lint Yaml files
-      - orb-tools/pack # Pack orb source
+      - orb-tools/lint:
+          filters:
+            tags:
+              only: /.*/   
+      - orb-tools/pack:
+          filters:
+            tags:
+              only: /.*/   
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
+          filters:
+            tags:
+              only: /.*/            
       # optional: Run BATS tests against your scripts
       - bats/run:
           path: ./src/tests
+          filters:
+            tags:
+              only: /.*/            
       # Publish development version(s) of the orb.
-      - orb-tools/publish-dev:
+      - orb-tools/publish:
           orb-name: nexbus/aws-lambda-go
           context: orb-publishing # A restricted context containing your private publishing credentials. Will only execute if approved by an authorized user.
+          pub-type: dev
+          vcs-type: << pipeline.project.type >>
           requires:
             - orb-tools/lint
             - orb-tools/pack
             - bats/run
             - shellcheck/check
+          filters:
+            tags:
+              only: /.*/  
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
-      - orb-tools/trigger-integration-tests-workflow:
-          name: trigger-integration-dev
+      - orb-tools/continue:
+          pipeline-number: << pipeline.number >>
           context: orb-publishing
           requires:
-            - orb-tools/publish-dev
-
-  # This `integration-test_deploy` workflow will only run
-  # when the run-integration-tests pipeline parameter is set to true.
-  # It is meant to be triggered by the "trigger-integration-tests-workflow"
-  # job, and run tests on <your orb>@dev:${CIRCLE_SHA1:0:7}.
-  integration-test_deploy:
-    when: << pipeline.parameters.run-integration-tests >>
-    jobs:
-      # Run any integration tests defined within the `jobs` key.
-      - integration-test-1
-      # Publish a semver version of the orb. relies on
-      # the commit subject containing the text "[semver:patch|minor|major|skip]"
-      # as that will determine whether a patch, minor or major
-      # version will be published or if publishing should
-      # be skipped.
-      # e.g. [semver:patch] will cause a patch version to be published.
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: nexbus/aws-lambda-go
-          context: orb-publishing
-          add-pr-comment: false
-          fail-if-semver-not-indicated: true
-          publish-version-tag: false
-          requires:
-            - integration-test-1
+            - orb-tools/publish
+          vcs-type: << pipeline.project.type >>
           filters:
             branches:
-              only:
-                - master
-                - main
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/ 

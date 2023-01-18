@@ -1,7 +1,7 @@
 description: >
   This job creates module documentation
 
-executor: golang
+executor: go-pulumi-lint-gh
 
 parameters:
   module_name:
@@ -17,3 +17,6 @@ steps:
       module_name: << parameters.module_name >>
       module_path: << parameters.module_path >>
       aggregate_name: << parameters.aggregate_name >>
+  - notify:
+      event: fail
+      template: basic_fail_1

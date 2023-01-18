@@ -30,7 +30,7 @@ steps:
       command: << include(scripts/create_module_release_tag.sh) >>
   - run:
       name: Install Github CLI
-      command: << include(scripts/install_github_cli.sh) >>
+      command: << include(scripts/authenticate_git.sh) >>
   - run:
       name: Create module release
       environment:

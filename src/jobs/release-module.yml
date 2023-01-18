@@ -1,7 +1,7 @@
 description: >
   This job creates a module release
 
-executor: golang
+executor: go-pulumi-lint-gh
 
 parameters:
   module_name:
@@ -14,3 +14,6 @@ steps:
   - release-module:
       module_name: << parameters.module_name >>
       module_path: << parameters.module_path >>
+  - notify:
+      event: fail
+      template: basic_fail_1

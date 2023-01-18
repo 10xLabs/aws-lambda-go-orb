@@ -1,8 +1,11 @@
 description: >
   This create or update the release pull request
 
-executor: node
+executor: go-pulumi-lint-gh
 
 steps:
   - checkout
   - prepare-release
+  - notify:
+      event: fail
+      template: basic_fail_1

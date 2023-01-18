@@ -3,9 +3,6 @@ description: >
 
 steps:
   - run:
-      name: Install commit linter
-      command: << include(scripts/install_commit_linter.sh) >>
-  - run:
       name: Configure commit linter
       command: << include(scripts/configure_commit_linter.sh) >>
   - run:
