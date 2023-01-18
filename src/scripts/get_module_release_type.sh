@@ -1,10 +1,12 @@
 # shellcheck disable=SC2148
 RELEASE_TYPE="PATCH"
 PULL_REQUEST_BODY=$(git log origin/master..origin/develop --pretty=format:%s -- "$MODULE_PATH")
+if [ "$CIRCLE_BRANCH" == "master" ]; then
+    PULL_REQUEST_BODY=$(git log HEAD...HEAD~1 --pretty=format:%s -- "$MODULE_PATH")
+fi
 # shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($PULL_REQUEST_BODY)
-for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"
-do
+for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"; do
     # shellcheck disable=SC2206
     TOKENS=(${COMMIT_MESSAGE//:/ })
     TYPE="${TOKENS[0]}"
@@ -16,4 +18,4 @@ do
     fi
 done
 
-echo "export RELEASE_TYPE=$RELEASE_TYPE" >> "$BASH_ENV"
+echo "export RELEASE_TYPE=$RELEASE_TYPE" >>"$BASH_ENV"
