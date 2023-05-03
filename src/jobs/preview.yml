@@ -1,0 +1,17 @@
+description: >
+  This job create a preview of the Pulumi stack changes
+
+executor: go-pulumi-lint-gh
+
+parameters:
+  working-directory:
+    type: string
+    default: deploy
+
+steps:
+  - checkout
+  - preview:
+    working-directory: << parameters.working-directory >>
+  - notify:
+      event: fail
+      template: basic_fail_1
