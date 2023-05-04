@@ -1,0 +1,25 @@
+description: >
+  This command create a preview of the Pulumi stack changes
+
+parameters:
+  working-directory:
+    type: string
+    default: deploy
+
+steps:
+  - attach_workspace:
+      at: .
+  - run:
+      name: Set stack name
+      command: << include(scripts/set_stack_name.sh) >>
+  - run: pulumi version
+  - run:
+      name: Install Pulumi Dependencies
+      environment:
+        WORKING_DIRECTORY: << parameters.working-directory >>
+      command: << include(scripts/install_pulumi_deps.sh) >>
+  - run:
+      name: Pulumi preview
+      environment:
+        WORKING_DIRECTORY: << parameters.working-directory >>
+      command: << include(scripts/pulumi_preview.sh) >>
