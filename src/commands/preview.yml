@@ -5,12 +5,17 @@ parameters:
   working-directory:
     type: string
     default: deploy
+  stack-name:
+    type: string
+    default: ""
 
 steps:
   - attach_workspace:
       at: .
   - run:
       name: Set stack name
+      environment:
+        STACK_NAME: << parameters.stack-name >>
       command: << include(scripts/set_stack_name.sh) >>
   - run: pulumi version
   - run:

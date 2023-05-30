@@ -7,11 +7,15 @@ parameters:
   working-directory:
     type: string
     default: deploy
+  stack-name:
+    type: string
+    default: ""
 
 steps:
   - checkout
   - preview:
-    working-directory: << parameters.working-directory >>
+      working-directory: << parameters.working-directory >>
+      stack-name: << parameters.stack-name >>
   - notify:
       event: fail
       template: basic_fail_1
