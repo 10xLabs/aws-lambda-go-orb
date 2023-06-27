@@ -8,6 +8,9 @@ parameters:
   stack-name:
     type: string
     default: ""
+  install-pulumi-deps:
+    type: boolean
+    default: true
 
 steps:
   - attach_workspace:
@@ -18,11 +21,15 @@ steps:
         STACK_NAME: << parameters.stack-name >>
       command: << include(scripts/set_stack_name.sh) >>
   - run: pulumi version
-  - run:
-      name: Install Pulumi Dependencies
-      environment:
-        WORKING_DIRECTORY: << parameters.working-directory >>
-      command: << include(scripts/install_pulumi_deps.sh) >>
+  - when:
+      condition:
+        equal: [ true, << parameters.install-pulumi-deps >> ]
+      steps:
+        run:
+          name: Install Pulumi Dependencies
+          environment:
+            WORKING_DIRECTORY: << parameters.working-directory >>
+          command: << include(scripts/install_pulumi_deps.sh) >>
   - run:
       name: Pulumi preview
       environment:

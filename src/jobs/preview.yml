@@ -10,12 +10,16 @@ parameters:
   stack-name:
     type: string
     default: ""
+  install-pulumi-deps:
+    type: boolean
+    default: true
 
 steps:
   - checkout
   - preview:
       working-directory: << parameters.working-directory >>
       stack-name: << parameters.stack-name >>
+      install-pulumi-deps: << parameters.install-pulumi-deps >>
   - notify:
       event: fail
       template: basic_fail_1
