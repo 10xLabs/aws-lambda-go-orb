@@ -11,6 +11,9 @@ parameters:
   install-pulumi-deps:
     type: boolean
     default: true
+  setup-remote-docker:
+    type: boolean
+    default: false
 
 steps:
   - attach_workspace:
@@ -30,6 +33,13 @@ steps:
           environment:
             WORKING_DIRECTORY: << parameters.working-directory >>
           command: << include(scripts/install_pulumi_deps.sh) >>
+  - when:
+      condition:
+        equal: [ true, << parameters.setup-remote-docker >> ]
+      steps:
+        - setup_remote_docker:
+            version: 20.10.23
+            docker_layer_caching: true
   - run:
       name: Pulumi update
       environment:
