@@ -1,0 +1,14 @@
+description: >
+  This command install Pulumi dependencies
+
+parameters:
+  working-directory:
+    type: string
+    default: deploy
+
+steps:
+  - run:
+      name: Install Pulumi Dependencies
+      environment:
+        WORKING_DIRECTORY: << parameters.working-directory >>
+      command: << include(scripts/install_pulumi_deps.sh) >>

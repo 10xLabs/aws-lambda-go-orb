@@ -1,5 +1,5 @@
 description: >
-  This command package the AWS Lambda Go function
+  This command create a preview of the Pulumi stack changes
 
 parameters:
   working-directory:
@@ -41,7 +41,7 @@ steps:
             version: 20.10.23
             docker_layer_caching: true
   - run:
-      name: Pulumi update
+      name: Pulumi preview
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
-      command: << include(scripts/pulumi_update.sh) >>
+      command: << include(scripts/pulumi_preview.sh) >>

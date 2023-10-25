@@ -1,5 +1,5 @@
 description: >
-  This job run the AWS Lambda Go function tests
+  This job create a preview of the Pulumi stack changes
 
 executor: go-pulumi-lint-gh
 
@@ -16,7 +16,7 @@ parameters:
 
 steps:
   - checkout
-  - deploy:
+  - preview:
       working-directory: << parameters.working-directory >>
       stack-name: << parameters.stack-name >>
       install-pulumi-deps: << parameters.install-pulumi-deps >>
