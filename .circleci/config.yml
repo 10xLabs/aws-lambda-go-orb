@@ -1,5 +1,5 @@
 version: 2.1
-setup: true 
+setup: true
 orbs:
   # Replace this with your own!
   orb-tools: circleci/orb-tools@11.2.0
@@ -38,29 +38,29 @@ workflows:
       - orb-tools/lint:
           filters:
             tags:
-              only: /.*/   
+              only: /.*/
       - orb-tools/pack:
           filters:
             tags:
-              only: /.*/   
+              only: /.*/
       - shellcheck/check:
           dir: ./src/scripts
           exclude: SC2148
           filters:
             tags:
-              only: /.*/            
+              only: /.*/
       # optional: Run BATS tests against your scripts
       - bats/run:
           path: ./src/tests
           filters:
             tags:
-              only: /.*/            
+              only: /.*/
       # Publish development version(s) of the orb.
       - orb-tools/publish:
-          orb-name: nexbus/aws-lambda-go
+          orb_name: nexbus/aws-lambda-go
           context: orb-publishing # A restricted context containing your private publishing credentials. Will only execute if approved by an authorized user.
-          pub-type: dev
-          vcs-type: << pipeline.project.type >>
+          pub_type: dev
+          vcs_type: << pipeline.project.type >>
           requires:
             - orb-tools/lint
             - orb-tools/pack
@@ -68,17 +68,17 @@ workflows:
             - shellcheck/check
           filters:
             tags:
-              only: /.*/  
+              only: /.*/
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/continue:
-          pipeline-number: << pipeline.number >>
+          pipeline_number: << pipeline.number >>
           context: orb-publishing
           requires:
             - orb-tools/publish
-          vcs-type: << pipeline.project.type >>
+          vcs_type: << pipeline.project.type >>
           filters:
             branches:
               ignore: /.*/
             tags:
-              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/ 
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
