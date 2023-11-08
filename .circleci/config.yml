@@ -72,6 +72,7 @@ workflows:
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/continue:
+          orb_name: nexbus/aws-lambda-go
           pipeline_number: << pipeline.number >>
           context: orb-publishing
           requires:
