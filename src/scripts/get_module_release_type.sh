@@ -7,9 +7,7 @@ fi
 # shellcheck disable=SC2206
 IFS=$'\n' COMMIT_MESSAGES=($PULL_REQUEST_BODY)
 for COMMIT_MESSAGE in "${COMMIT_MESSAGES[@]}"; do
-    # shellcheck disable=SC2206
-    TOKENS=(${COMMIT_MESSAGE//:/ })
-    TYPE="${TOKENS[0]}"
+    TYPE=${COMMIT_MESSAGE%:*}
     if [ "${TYPE:(-1)}" = "!" ]; then
         RELEASE_TYPE="MAJOR"
     fi
