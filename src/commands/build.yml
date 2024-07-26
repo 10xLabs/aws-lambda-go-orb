@@ -18,7 +18,6 @@ parameters:
 steps:
   - run:
       name: Build executable
-      resource_class: arm.medium
       environment:
         INPUT_FILE: << parameters.build-input-file >>
         OUTPUT_FILE: << parameters.build-output-file >>

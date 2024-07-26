@@ -3,6 +3,8 @@ description: >
 
 executor: golang
 
+resource_class: arm.medium
+
 parameters:
   build-input-file:
     type: string
