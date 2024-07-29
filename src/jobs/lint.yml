@@ -1,7 +1,7 @@
 description: >
   This lint the code using the defined golangci-lint config
 
-executor: go-pulumi-lint-gh
+executor: golang
 resource_class: arm.xlarge
 steps:
   - checkout
