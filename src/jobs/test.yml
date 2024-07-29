@@ -2,6 +2,7 @@ description: >
   This job run the AWS Lambda Go function tests
 
 executor: golang
+resource_class: arm.xlarge
 
 parameters:
   minimum-coverage:
