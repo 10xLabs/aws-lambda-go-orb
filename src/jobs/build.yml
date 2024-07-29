@@ -3,7 +3,7 @@ description: >
 
 executor: golang
 
-resource_class: arm.medium
+resource_class: arm.xlarge
 
 parameters:
   build-input-file:
