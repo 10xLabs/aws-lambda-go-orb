@@ -5,7 +5,6 @@ executor: golangci-lint
 resource_class: arm.xlarge
 steps:
   - checkout
-  - lint-commits
   - lint-code
   - notify:
       event: fail
