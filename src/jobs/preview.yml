@@ -2,7 +2,7 @@ description: >
   This job create a preview of the Pulumi stack changes
 
 executor: go-pulumi-lint-gh
-
+resource_class: arm.medium
 parameters:
   working-directory:
     type: string

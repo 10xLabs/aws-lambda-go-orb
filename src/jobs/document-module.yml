@@ -2,7 +2,7 @@ description: >
   This job creates module documentation
 
 executor: go-pulumi-lint-gh
-
+resource_class: arm.medium
 parameters:
   module_name:
     type: string

@@ -2,7 +2,7 @@ description: >
   This job build the AWS Lambda Go function executable
 
 executor: golang
-
+resource_class: arm.xlarge
 parameters:
   build-input-file:
     type: string

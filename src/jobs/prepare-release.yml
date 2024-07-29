@@ -2,7 +2,7 @@ description: >
   This create or update the release pull request
 
 executor: go-pulumi-lint-gh
-
+resource_class: arm.medium
 steps:
   - checkout
   - prepare-release

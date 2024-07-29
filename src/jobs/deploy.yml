@@ -2,7 +2,7 @@ description: >
   This job run the AWS Lambda Go function tests
 
 executor: go-pulumi-lint-gh
-
+resource_class: arm.medium
 parameters:
   working-directory:
     type: string
