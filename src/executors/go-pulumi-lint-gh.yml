@@ -1,5 +1,5 @@
 description: >
   Default executor using Docker and Go.
 docker:
-  - image: "nexbus/go-pulumi:latest"
+  - image: "nexbus/go-pulumi:arm"
 resource_class: arm.medium
