@@ -3,8 +3,5 @@ description: >
 
 steps:
   - run:
-      name: Install golanci-lint
-      command: << include(scripts/install_golangci_lint.sh) >>
-  - run:
       name: Lint code
       command: << include(scripts/lint_code.sh) >>

@@ -1,7 +1,7 @@
 description: >
   This lint the code using the defined golangci-lint config
 
-executor: golang-node
+executor: golangci-lint
 resource_class: arm.xlarge
 steps:
   - checkout
