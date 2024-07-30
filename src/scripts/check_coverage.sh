@@ -1,5 +1,5 @@
-#!/bin/bash
-CURRENT_COVERAGE=$(GOEXPERIMENT='nocoverageredesign' GOFLAGS='-mod=vendor' go test -coverprofile=coverage.out -parallel "$(nproc)" ./... | awk '{ if ($1 ~ /coverage:/) { sum += $2; count++ }} END { print sum/count }')
+# shellcheck disable=SC2148
+CURRENT_COVERAGE=$(GOEXPERIMENT='nocoverageredesign' GOFLAGS='-mod=vendor' go test --cover ./... | grep -Eo '[0-9]+\.[0-9]+% of statements' | awk -F'%' '{print $1}' | awk '{ sum += $1 } END { print sum/NR }')
 CURRENT_COVERAGE=${CURRENT_COVERAGE%.*}
 MINIMUM_COVERAGE=${MINIMUM_COVERAGE%.*}
 

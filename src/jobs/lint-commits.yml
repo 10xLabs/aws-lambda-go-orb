@@ -1,8 +1,8 @@
 description: >
   This lint commit using conventional commits format
 
-executor: go-pulumi-lint-gh
-resource_class: arm.medium
+executor: go-pulumi-lint-gh-amd
+resource_class: xlarge
 steps:
   - checkout
   - lint-commits
