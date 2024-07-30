@@ -38,7 +38,7 @@ steps:
               WORKING_DIRECTORY: << parameters.working-directory >>
             command: << include(scripts/install_pulumi_deps.sh) >>
         - save_cache:
-            key: v1-deps-{{ checksum "<< parameters.working-directory >>/yarn-lock.json" }}
+            key: v1-deps-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
             paths:
               - << parameters.working-directory >>/node_modules
   - when:
