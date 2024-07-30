@@ -1,7 +1,8 @@
 description: >
   This job run the AWS Lambda Go function tests
 
-executor: golang
+executor: go-pulumi-lint-gh
+resource_class: xlarge
 
 parameters:
   minimum-coverage:

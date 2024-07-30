@@ -2,10 +2,9 @@ description: >
   This lint the code using the defined golangci-lint config
 
 executor: go-pulumi-lint-gh
-
+resource_class: xlarge
 steps:
   - checkout
-  - lint-commits
   - lint-code
   - notify:
       event: fail

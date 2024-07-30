@@ -2,6 +2,7 @@ description: >
   Default executor using Docker and Node.
 docker:
   - image: "cimg/node:<< parameters.tag >>"
+resource_class: arm.medium
 parameters:
   tag:
     default: "20.11.0"

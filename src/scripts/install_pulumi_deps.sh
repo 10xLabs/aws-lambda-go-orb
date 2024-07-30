@@ -7,7 +7,7 @@ if test -f "yarn.lock"; then
     echo  '"@10xLabs:registry" "https://npm.pkg.github.com"' > ./.yarnrc
     echo 'registry "https://registry.npmjs.org"' >> ./.yarnrc
     
-    yarn install
+    yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
 else
     echo  "@10xLabs:registry=$NPM_GITHUB_REGISTRY" >> ./.npmrc
     echo "registry=https://registry.npmjs.org" >> ./.npmrc
