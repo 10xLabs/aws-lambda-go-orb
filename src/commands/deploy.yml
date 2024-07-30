@@ -30,17 +30,17 @@ steps:
       steps:
         - restore_cache:
             keys:
-              - v1-deps-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
-              - v1-deps-
+              - yarn-packages-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+              - yarn-packages-
         - run:
             name: Install Pulumi Dependencies
             environment:
               WORKING_DIRECTORY: << parameters.working-directory >>
             command: << include(scripts/install_pulumi_deps.sh) >>
         - save_cache:
-            key: v1-deps-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+            key: yarn-packages-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
             paths:
-              - << parameters.working-directory >>/node_modules
+              - ~/.cache/yarn
 
   - when:
       condition:

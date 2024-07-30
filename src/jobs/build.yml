@@ -1,7 +1,7 @@
 description: >
   This job build the AWS Lambda Go function executable
 
-executor: go-pulumi-lint-gh-amd
+executor: go-pulumi-lint-gh
 resource_class: xlarge
 parameters:
   build-input-file:
