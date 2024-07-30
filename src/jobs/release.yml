@@ -2,7 +2,7 @@ description: >
   This release the code
 
 executor: go-pulumi-lint-gh
-resource_class: arm.medium
+resource_class: medium
 steps:
   - checkout
   - release
