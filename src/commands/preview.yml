@@ -30,7 +30,7 @@ steps:
       steps:
         - restore_cache:
             keys:
-              - v1-deps-{{ checksum "<< parameters.working-directory >>/yarn-lock.json" }}
+              - v1-deps-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
               - v1-deps-
         - run:
             name: Install Pulumi Dependencies
@@ -40,7 +40,7 @@ steps:
         - save_cache:
             key: v1-deps-{{ checksum "<< parameters.working-directory >>/yarn-lock.json" }}
             paths:
-              - node_modules
+              - << parameters.working-directory >>/node_modules
   - when:
       condition:
         equal: [true, << parameters.setup-remote-docker >>]
