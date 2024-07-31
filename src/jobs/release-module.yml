@@ -2,7 +2,7 @@ description: >
   This job creates a module release
 
 executor: go-pulumi-lint-gh
-
+resource_class: medium
 parameters:
   module_name:
     type: string
