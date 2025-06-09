@@ -13,6 +13,9 @@ parameters:
   install-pulumi-deps:
     type: boolean
     default: true
+  setup-remote-docker:
+    type: boolean
+    default: false
 
 steps:
   - checkout
@@ -20,6 +23,7 @@ steps:
       working-directory: << parameters.working-directory >>
       stack-name: << parameters.stack-name >>
       install-pulumi-deps: << parameters.install-pulumi-deps >>
+      setup-remote-docker: << parameters.setup-remote-docker >>
   - notify:
       event: fail
       template: basic_fail_1
