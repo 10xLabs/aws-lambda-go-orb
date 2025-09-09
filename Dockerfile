@@ -1,11 +1,11 @@
-FROM cimg/go:1.22-node
+FROM cimg/go:1.25-node
 
 USER circleci
 WORKDIR /home/circleci
 
 RUN sudo npm install -g @commitlint/cli @commitlint/config-conventional
 
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v2.0.0
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v2.4.0
 
 RUN curl -fsSL https://get.pulumi.com | sh \
   && echo "export PATH=${HOME}/.pulumi/bin:$PATH" >> ${HOME}/.profile

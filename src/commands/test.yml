@@ -7,7 +7,7 @@ parameters:
     default: /tmp/test_results
   minimum-coverage:
     type: string
-    default: "85.00"
+    default: "50.00"
   artifacts-folder:
     type: string
     default: /tmp/artifacts

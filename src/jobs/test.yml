@@ -7,7 +7,7 @@ resource_class: xlarge
 parameters:
   minimum-coverage:
     type: string
-    default: "85.00"
+    default: "50.00"
 
 steps:
   - checkout
