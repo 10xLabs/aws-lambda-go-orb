@@ -1,4 +1,4 @@
-FROM cimg/go:1.25-node
+FROM cimg/go:1.27-node
 
 USER circleci
 WORKDIR /home/circleci
