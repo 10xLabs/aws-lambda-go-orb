@@ -3,9 +3,16 @@
 echo "=== Running coverage check ==="
 echo "Minimum coverage required: ${MINIMUM_COVERAGE}%"
 
-# Run tests with coverage and capture output
 TEST_OUTPUT=$(GOFLAGS='-mod=vendor' go test -cover ./... 2>&1)
+GO_TEST_EXIT_CODE=$?
 echo "$TEST_OUTPUT"
+
+# Without this the coverage of the packages that did pass is averaged and can
+# clear the threshold while another package's tests were failing.
+if [ "$GO_TEST_EXIT_CODE" -ne 0 ]; then
+    echo "go test failed with exit code $GO_TEST_EXIT_CODE; not evaluating coverage"
+    exit "$GO_TEST_EXIT_CODE"
+fi
 
 # Extract only lines with actual coverage percentages (not "no test files")
 # Look for lines that contain "ok" and "coverage:" followed by a percentage
@@ -16,10 +23,8 @@ if [ -z "$COVERAGE_VALUES" ]; then
     exit 1
 fi
 
-# Calculate average coverage
 CURRENT_COVERAGE=$(echo "$COVERAGE_VALUES" | awk '{ sum += $1; count++ } END { if (count > 0) printf "%.1f", sum/count; else print "0" }')
 
-# Convert to integers for comparison
 CURRENT_INT=${CURRENT_COVERAGE%.*}
 MINIMUM_INT=${MINIMUM_COVERAGE%.*}
 

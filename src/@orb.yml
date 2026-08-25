@@ -1,7 +1,9 @@
 version: 2.1
 
 description: >
-  Test and build AWS Lambda Go functions
+  A comprehensive CircleCI orb for building, testing, linting, and deploying AWS Lambda functions
+  written in Go. Includes support for vendored dependencies, coverage reporting, Pulumi deployments,
+  and automated release management.
 
 display:
   home_url: "https://kolors.com.mx"
