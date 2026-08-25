@@ -38,10 +38,16 @@ steps:
         - restore_cache:
             name: Restore Go build cache
             keys:
-              # {{ arch }} matters: the cached objects are architecture specific
-              # and cache keys are immutable.
-              - go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
-              - go-build-v1-{{ arch }}-
+              # Two architectures matter here and they are not the same one.
+              # {{ arch }} is the host the job runs on; build-architecture is
+              # what the binary is cross-compiled for, and Go caches compiled
+              # objects per target. A key naming only the host lets a native
+              # compile (lint, test) and a cross compile share one entry, where
+              # the cross compile gets no reuse at all — and because cache keys
+              # are immutable, whichever job saves first locks the others out
+              # of ever storing their own.
+              - go-target-<< parameters.build-architecture >>-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+              - go-target-<< parameters.build-architecture >>-v1-{{ arch }}-
   - run:
       name: Build executable
       environment:
@@ -60,7 +66,7 @@ steps:
       steps:
         - save_cache:
             name: Store Go build cache
-            key: go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+            key: go-target-<< parameters.build-architecture >>-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
             paths:
               - ~/.cache/go-build
   - persist_to_workspace:

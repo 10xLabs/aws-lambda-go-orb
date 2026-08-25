@@ -35,10 +35,12 @@ steps:
         - restore_cache:
             name: Restore Go build cache
             keys:
-              # {{ arch }} matters: the cached objects are architecture specific
-              # and cache keys are immutable.
-              - go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
-              - go-build-v1-{{ arch }}-
+              # Shared with the other native-compiling command (lint and test
+              # both build for the host), which is deliberate: whichever runs
+              # first warms the cache for the other. The build command uses a
+              # separate key because it cross-compiles for a different target.
+              - go-host-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+              - go-host-v1-{{ arch }}-
   - run:
       name: Run tests
       environment:
@@ -65,6 +67,6 @@ steps:
       steps:
         - save_cache:
             name: Store Go build cache
-            key: go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+            key: go-host-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
             paths:
               - ~/.cache/go-build
