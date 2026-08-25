@@ -2,8 +2,9 @@ description: >
   This release the code
 
 steps:
+  - install-github-cli
   - run:
-      name: Install Github CLI
+      name: Authenticate GitHub CLI
       command: << include(scripts/authenticate_git.sh) >>
   - run:
       name: Create release tag

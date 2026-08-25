@@ -18,6 +18,7 @@ parameters:
 steps:
   - attach_workspace:
       at: .
+  - install-pulumi-cli
   - run:
       name: Set stack name
       environment:

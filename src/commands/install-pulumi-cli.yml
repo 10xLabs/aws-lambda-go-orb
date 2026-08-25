@@ -1,0 +1,27 @@
+description: >
+  Installs the Pulumi CLI and puts it on the PATH, restoring it from the cache
+  when the requested version has been installed by an earlier build.
+  Not to be confused with install-pulumi-deps, which installs the npm
+  dependencies of the Pulumi program itself.
+
+parameters:
+  version:
+    description: Pulumi CLI version to install, without the leading "v".
+    type: string
+    default: "3.259.0"
+
+steps:
+  - restore_cache:
+      name: Restore Pulumi CLI
+      keys:
+        - pulumi-cli-v1-<< parameters.version >>
+  - run:
+      name: Install Pulumi CLI
+      environment:
+        PULUMI_VERSION: << parameters.version >>
+      command: << include(scripts/install_pulumi_cli.sh) >>
+  - save_cache:
+      name: Store Pulumi CLI
+      key: pulumi-cli-v1-<< parameters.version >>
+      paths:
+        - ~/.pulumi

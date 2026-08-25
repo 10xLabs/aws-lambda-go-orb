@@ -1,5 +1,6 @@
 description: >
-  Default executor using Docker and Node.
+  Executor for jobs that drive Node tooling: the Pulumi programs used by
+  deploy and preview, and the commitlint run used by lint-commits.
 docker:
   - image: "cimg/node:<< parameters.tag >>"
 resource_class: arm.medium

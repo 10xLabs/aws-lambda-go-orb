@@ -1,0 +1,13 @@
+description: >
+  Minimal executor for jobs that only need git, curl and the GitHub CLI,
+  such as the release and changelog jobs. Carries no language toolchain.
+docker:
+  - image: "cimg/base:<< parameters.tag >>"
+resource_class: arm.medium
+parameters:
+  tag:
+    default: "stable"
+    description: >
+      Pick a specific base image variant:
+      https://hub.docker.com/r/cimg/base
+    type: string

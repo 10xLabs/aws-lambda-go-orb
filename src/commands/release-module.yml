@@ -28,8 +28,9 @@ steps:
       environment:
         MODULE_NAME: << parameters.module_name >>
       command: << include(scripts/create_module_release_tag.sh) >>
+  - install-github-cli
   - run:
-      name: Install Github CLI
+      name: Authenticate GitHub CLI
       command: << include(scripts/authenticate_git.sh) >>
   - run:
       name: Create module release
