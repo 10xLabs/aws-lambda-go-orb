@@ -6,8 +6,11 @@ docker:
 resource_class: arm.medium
 parameters:
   tag:
-    default: "stable"
+    default: "current"
     description: >
       Pick a specific base image variant:
       https://hub.docker.com/r/cimg/base
+      Note that the "stable" tag is published for amd64 only, so it cannot run
+      on this executor's arm resource class; "current" and the dated tags such
+      as "2026.08" are multi-arch.
     type: string

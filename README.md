@@ -32,7 +32,7 @@ jobs:
         tag: "1.25"
 ```
 
-Also of note: `GOEXPERIMENT=nocoverageredesign` has been removed from the coverage check, because that experiment no longer exists in Go 1.24 and later and made `go` exit with `unknown GOEXPERIMENT coverageredesign`. The `go-pulumi-lint-gh` executor is gone; jobs now use `golang`, `node` or `base`.
+Also of note: `GOEXPERIMENT=nocoverageredesign` has been removed from the coverage check, because that experiment no longer exists in Go 1.24 and later and made `go` exit with `unknown GOEXPERIMENT coverageredesign`. The `go-pulumi-lint-gh` executor is gone; jobs now use `golang`, `node` or `base`. The `base` executor defaults to `cimg/base:current` rather than `cimg/base:stable`, because `stable` is published for amd64 only and these jobs run on an arm resource class.
 
 Additional READMEs are available in each directory.
 
