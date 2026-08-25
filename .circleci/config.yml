@@ -44,10 +44,56 @@ workflows:
       - bats/run:
           path: ./src/tests
           filters: *filters
+      # A development version, so consumer repositories can test against a
+      # commit before it is released, e.g. by pinning
+      # nexbus/aws-lambda-go@dev:alpha in their own config.
+      #
+      # Neither job carries a tag filter, so both run on branches only: a
+      # release tag publishes a production version through test-deploy.yml.
+      #
+      # The two are mutually exclusive by branch. dev:alpha is published from
+      # master alone, because publishing it from every branch (as this config
+      # used to) means whichever branch built last owns the tag - dev:alpha
+      # spent a release carrying a develop snapshot rather than master's.
+      - orb-tools/publish:
+          name: publish-dev
+          filters:
+            branches:
+              ignore: master
+          orb_name: nexbus/aws-lambda-go
+          vcs_type: << pipeline.project.type >>
+          pub_type: dev
+          # Commit-specific, so a branch can be tested without disturbing the
+          # shared dev:alpha tag.
+          dev_tags: dev:${CIRCLE_SHA1}
+          enable_pr_comment: false
+          context: orb-publishing
+          requires:
+            - orb-tools/lint
+            - orb-tools/review
+            - orb-tools/pack
+            - shellcheck/check
+            - bats/run
+      - orb-tools/publish:
+          name: publish-dev-alpha
+          orb_name: nexbus/aws-lambda-go
+          vcs_type: << pipeline.project.type >>
+          pub_type: dev
+          dev_tags: dev:${CIRCLE_SHA1},dev:alpha
+          enable_pr_comment: false
+          context: orb-publishing
+          filters:
+            branches:
+              only: master
+          requires:
+            - orb-tools/lint
+            - orb-tools/review
+            - orb-tools/pack
+            - shellcheck/check
+            - bats/run
       # Injects this commit's orb source into .circleci/test-deploy.yml and
-      # continues the pipeline, so the integration tests exercise the orb as if
-      # it were published. No development version is published: nothing outside
-      # this repository consumes dev orbs.
+      # continues the pipeline, so this repository's own integration tests need
+      # no published version to run against.
       - orb-tools/continue:
           # Reference name only, no namespace: this is the key under "orbs" in
           # test-deploy.yml that the packed orb source gets injected into.
