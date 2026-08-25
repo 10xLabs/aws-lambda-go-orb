@@ -26,9 +26,15 @@ workflows:
           exclude: RC010
           filters: *filters
       - orb-tools/pack:
-          # orb-tools/pack runs "circleci orb validate --token $CIRCLE_TOKEN",
-          # so it needs the publishing credentials even though it publishes
-          # nothing. The other step 1 jobs, continue included, do not.
+          # orb-tools/pack validates the packed orb through the CircleCI API. Its
+          # script falls back to CIRCLE_TOKEN=dummy outside self-hosted CircleCI,
+          # but that fallback is rejected on Cloud for this project: without a
+          # context the job fails with "failure calling GraphQL API: 401
+          # Unauthorized" (reproduced on jobs 3345 and 3406). A project-level
+          # CIRCLE_TOKEN exists but is not accepted, and context values take
+          # precedence over project ones, so the context is what supplies a
+          # working token. Narrowing this to a read-only context would be a
+          # genuine improvement; removing it outright breaks the job.
           context: orb-publishing
           filters: *filters
       - shellcheck/check:
