@@ -1,13 +1,22 @@
 description: >
-  Sample example description.
-# Provide a use-case based example for using this orb.
-# Everything in the `usage` section will be displayed in the orb registry.
-# Comments are not retained.
+  Build, test, and deploy an AWS Lambda Go function with full CI/CD pipeline
 usage:
   version: 2.1
   orbs:
-    <orb-name>: <namespace>/<orb-name>@1.2.3
+    aws-lambda-go: nexbus/aws-lambda-go@3.25.3
   workflows:
-    use-my-orb:
+    build-test-deploy:
       jobs:
-        - <orb-name>/<job-name>
+        - aws-lambda-go/lint-code
+        - aws-lambda-go/test:
+            minimum-coverage: "80.00"
+        - aws-lambda-go/build:
+            requires:
+              - aws-lambda-go/lint-code
+              - aws-lambda-go/test
+        - aws-lambda-go/deploy:
+            requires:
+              - aws-lambda-go/build
+            filters:
+              branches:
+                only: master
