@@ -23,7 +23,9 @@ steps:
       environment:
         STACK_NAME: << parameters.stack-name >>
       command: << include(scripts/set_stack_name.sh) >>
-  - run: pulumi version
+  - run:
+      name: Print Pulumi version
+      command: pulumi version
   - when:
       condition:
         equal: [true, << parameters.install-pulumi-deps >>]
