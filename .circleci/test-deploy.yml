@@ -46,13 +46,17 @@ jobs:
           build-input-file: main.go
           build-output-file: main
           build-architecture: << parameters.architecture >>
-          package-output-file: deploy/lambda.zip
+          # Unique per architecture: the build command persists this path to the
+          # workspace, and orb-tools/publish attaches the layers of every job it
+          # requires, so a shared path would collide across the two builds.
+          package-output-file: deploy/lambda-<< parameters.architecture >>.zip
       - run:
           name: Verify the packaged artifact
           command: |
-            test -f deploy/lambda.zip
+            PACKAGE="deploy/lambda-<< parameters.architecture >>.zip"
+            test -f "$PACKAGE"
             # zip -sf, not unzip: the orb already requires zip, unzip is not guaranteed.
-            zip -sf deploy/lambda.zip | grep -Eq '^[[:space:]]+main$'
+            zip -sf "$PACKAGE" | grep -Eq '^[[:space:]]+main$'
             ELF_MAGIC=$(head -c 4 main | od -An -tx1 | tr -d ' \n')
             test "$ELF_MAGIC" = 7f454c46
             ELF_MACHINE=$(dd if=main bs=1 skip=18 count=2 2>/dev/null | od -An -tx1 | tr -d ' \n')
@@ -100,8 +104,6 @@ workflows:
       - integration-test-build-nested-output:
           filters: *filters
       - orb-tools/pack:
-          # Validates the packed orb via the API; needs CIRCLE_TOKEN.
-          context: orb-publishing
           filters: *release-filters
       - orb-tools/publish:
           orb_name: nexbus/aws-lambda-go
