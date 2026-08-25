@@ -52,8 +52,20 @@ steps:
         - setup_remote_docker:
             version: default
             docker_layer_caching: true
+  # See the note in preview.yml: the provider plugins are large and are
+  # otherwise re-downloaded on every run.
+  - restore_cache:
+      name: Restore Pulumi plugins
+      keys:
+        - pulumi-plugins-v1-{{ arch }}-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+        - pulumi-plugins-v1-{{ arch }}-
   - run:
       name: Pulumi update
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
       command: << include(scripts/pulumi_update.sh) >>
+  - save_cache:
+      name: Store Pulumi plugins
+      key: pulumi-plugins-v1-{{ arch }}-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+      paths:
+        - ~/.pulumi/plugins
