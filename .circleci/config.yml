@@ -44,47 +44,25 @@ workflows:
       - bats/run:
           path: ./src/tests
           filters: *filters
-      # A development version, so consumer repositories can test against a
-      # commit before it is released, e.g. by pinning
-      # nexbus/aws-lambda-go@dev:alpha in their own config.
+      # A development version, published from every branch, so a consumer
+      # repository can test a change before it is released by pinning
+      # nexbus/aws-lambda-go@dev:alpha in its own config.
       #
-      # Neither job carries a tag filter, so both run on branches only: a
-      # release tag publishes a production version through test-deploy.yml.
+      # Both tags are published. dev:alpha tracks the most recent branch build,
+      # which is what makes the push-a-branch-then-test loop work without
+      # touching the consumer's config. dev:<sha> is the deterministic pin to
+      # use when two branches are in flight and dev:alpha would be ambiguous.
       #
-      # The two are mutually exclusive by branch. dev:alpha is published from
-      # master alone, because publishing it from every branch (as this config
-      # used to) means whichever branch built last owns the tag - dev:alpha
-      # spent a release carrying a develop snapshot rather than master's.
+      # There is no tag filter, so this runs on branches only: a release tag
+      # publishes a production version through test-deploy.yml instead.
       - orb-tools/publish:
           name: publish-dev
-          filters:
-            branches:
-              ignore: master
-          orb_name: nexbus/aws-lambda-go
-          vcs_type: << pipeline.project.type >>
-          pub_type: dev
-          # Commit-specific, so a branch can be tested without disturbing the
-          # shared dev:alpha tag.
-          dev_tags: dev:${CIRCLE_SHA1}
-          enable_pr_comment: false
-          context: orb-publishing
-          requires:
-            - orb-tools/lint
-            - orb-tools/review
-            - orb-tools/pack
-            - shellcheck/check
-            - bats/run
-      - orb-tools/publish:
-          name: publish-dev-alpha
           orb_name: nexbus/aws-lambda-go
           vcs_type: << pipeline.project.type >>
           pub_type: dev
           dev_tags: dev:${CIRCLE_SHA1},dev:alpha
           enable_pr_comment: false
           context: orb-publishing
-          filters:
-            branches:
-              only: master
           requires:
             - orb-tools/lint
             - orb-tools/review

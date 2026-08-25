@@ -35,10 +35,10 @@ Or point it at a manifest that does exist:
 
 ## Development versions
 
-Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released:
+Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released. Two tags are published on each build:
 
-- **`dev:<full-sha>`** from any branch other than `master`
-- **`dev:alpha`** from `master` only, alongside its `dev:<full-sha>`
+- **`dev:alpha`** — tracks the most recent branch build
+- **`dev:<full-sha>`** — a deterministic pin for that exact commit
 
 Pin one in a consumer's `.circleci/config.yml`:
 
@@ -47,7 +47,12 @@ orbs:
   aws-lambda-go: nexbus/aws-lambda-go@dev:alpha
 ```
 
-`dev:alpha` is published from `master` alone on purpose. When every branch published it, the tag belonged to whichever branch built last, which is how it once ended up serving a feature-branch snapshot instead of `master`. Development versions expire 90 days after publication.
+`dev:alpha` is the convenient one: push an orb branch, and the consumer picks it up on its next pipeline with no config change. Because every branch publishes it, the tag belongs to whichever branch built last — so when two branches are in flight, pin `dev:<full-sha>` instead.
+
+Two things to know when testing against a development version:
+
+- **Trigger a new pipeline, don't rerun a failed one.** Orbs resolve when a pipeline's config is compiled, so a rerun reuses the version that was current when the pipeline was created.
+- Development versions expire 90 days after publication.
 
 Production versions are published only by pushing a `vX.Y.Z` tag; no branch publishes one.
 
