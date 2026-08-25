@@ -1,8 +1,16 @@
 description: >
   This lint commit using conventional commits format
 
-executor: go-pulumi-lint-gh
+executor: << parameters.executor >>
 resource_class: xlarge
+parameters:
+  executor:
+    description: >
+      Executor this job runs on. Override it to pin a different image tag, for
+      example a specific Go or Node version.
+    type: executor
+    default: node
+
 steps:
   - checkout
   - lint-commits

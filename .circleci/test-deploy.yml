@@ -17,6 +17,8 @@ release-filters: &release-filters
   tags:
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
+# Every job below runs on one of the orb's own executors, so the tests cover the
+# executor definitions themselves and not just the scripts.
 jobs:
   # Exercises the build command end to end (build.sh, then package.sh) against a
   # throwaway vendored Go module, and asserts the artifact really is a Linux
@@ -32,14 +34,13 @@ jobs:
           architecture above: 3e00 for x86-64, b700 for aarch64. Asserting on it
           proves the architecture reached the compiler.
         type: string
-    docker:
-      - image: cimg/go:1.27
+    executor: aws-lambda-go/golang
     steps:
       - run:
           name: Scaffold a vendored Go Lambda project
           command: |
             mkdir -p vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.22\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
             : > vendor/modules.txt
             printf 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("aws-lambda-go orb integration fixture")\n}\n' > main.go
       - aws-lambda-go/build:
@@ -65,14 +66,13 @@ jobs:
   # The output directory is deliberately absent here: consumers are not required
   # to commit deploy/, and package.sh has to create it before resolving the path.
   integration-test-build-nested-output:
-    docker:
-      - image: cimg/go:1.27
+    executor: aws-lambda-go/golang
     steps:
       - run:
           name: Scaffold a vendored Go Lambda project in a subdirectory
           command: |
             mkdir -p cmd/lambda vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.22\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
             : > vendor/modules.txt
             printf 'package main\n\nfunc main() {}\n' > cmd/lambda/main.go
       - aws-lambda-go/build:
@@ -85,6 +85,73 @@ jobs:
             test -f dist/nested/lambda.zip
             zip -sf dist/nested/lambda.zip | grep -Eq '^[[:space:]]+main$'
             ! zip -sf dist/nested/lambda.zip | grep -q 'build/bin'
+
+  # Covers the three scripts behind the test command: test.sh, which uses the
+  # gotestsum the Go convenience image ships, export_coverage.sh, which uses
+  # "go tool cover", and check_coverage.sh, which re-runs "go test -cover".
+  integration-test-test:
+    executor: aws-lambda-go/golang
+    steps:
+      - run:
+          name: Scaffold a vendored Go module with a covering test
+          command: |
+            mkdir -p vendor
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            : > vendor/modules.txt
+            printf 'package fixture\n\nfunc Add(a, b int) int {\n\treturn a + b\n}\n' > fixture.go
+            printf 'package fixture\n\nimport "testing"\n\nfunc TestAdd(t *testing.T) {\n\tif Add(1, 2) != 3 {\n\t\tt.Fatal("Add did not add")\n\t}\n}\n' > fixture_test.go
+      - aws-lambda-go/test:
+          minimum-coverage: "50.00"
+      - run:
+          name: Verify the reports the test command is documented to store
+          command: |
+            test -f /tmp/test_results/unit-tests.xml
+            test -f /tmp/artifacts/coverage.html
+            grep -q 'TestAdd' /tmp/test_results/unit-tests.xml
+
+  # golangci-lint is preinstalled in the Go image; this also pins down that the
+  # bundled major version reads a v2 configuration.
+  integration-test-lint-code:
+    executor: aws-lambda-go/golang
+    steps:
+      - run:
+          name: Scaffold a Go module with a golangci-lint v2 config
+          command: |
+            mkdir -p vendor
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            : > vendor/modules.txt
+            printf 'package fixture\n\nfunc Add(a, b int) int {\n\treturn a + b\n}\n' > fixture.go
+            printf 'version: "2"\n' > .golangci.yml
+      - aws-lambda-go/lint-code
+
+  # The three tools the convenience images do not carry. Each install command is
+  # asserted to put the expected version on the PATH for later steps.
+  integration-test-install-pulumi-cli:
+    executor: aws-lambda-go/node
+    steps:
+      - aws-lambda-go/install-pulumi-cli
+      - run:
+          name: Verify Pulumi is on the PATH
+          command: pulumi version | grep -Eq '^v3\.'
+
+  integration-test-install-github-cli:
+    executor: aws-lambda-go/base
+    steps:
+      - aws-lambda-go/install-github-cli
+      - run:
+          name: Verify the GitHub CLI is on the PATH
+          command: gh --version | grep -q 'gh version 2\.'
+
+  integration-test-install-commitlint:
+    executor: aws-lambda-go/node
+    steps:
+      - aws-lambda-go/install-commitlint
+      - run:
+          name: Verify commitlint accepts a conventional subject and rejects a bad one
+          command: |
+            echo "module.exports = {extends: ['@commitlint/config-conventional']}" > commitlint.config.js
+            echo "feat: a conventional subject" | npx commitlint
+            ! echo "not conventional at all" | npx commitlint
 
 workflows:
   # Step 2 of the Orb Development Kit: integration tests against the injected
@@ -103,6 +170,16 @@ workflows:
           filters: *filters
       - integration-test-build-nested-output:
           filters: *filters
+      - integration-test-test:
+          filters: *filters
+      - integration-test-lint-code:
+          filters: *filters
+      - integration-test-install-pulumi-cli:
+          filters: *filters
+      - integration-test-install-github-cli:
+          filters: *filters
+      - integration-test-install-commitlint:
+          filters: *filters
       - orb-tools/pack:
           # Needs a working CIRCLE_TOKEN to validate; see the note in config.yml.
           context: orb-publishing
@@ -118,4 +195,9 @@ workflows:
             - integration-test-build-amd64
             - integration-test-build-arm64
             - integration-test-build-nested-output
+            - integration-test-test
+            - integration-test-lint-code
+            - integration-test-install-pulumi-cli
+            - integration-test-install-github-cli
+            - integration-test-install-commitlint
           filters: *release-filters

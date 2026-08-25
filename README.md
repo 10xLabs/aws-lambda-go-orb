@@ -1,10 +1,38 @@
-# Orb Project Template
+# AWS Lambda Go Orb
 
 [![CircleCI Build Status](https://circleci.com/gh/10xLabs/aws-lambda-go-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/10xLabs/aws-lambda-go-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/nexbus/aws-lambda-go)](https://circleci.com/orbs/registry/orb/nexbus/aws-lambda-go) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/10xLabs/aws-lambda-go-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 
 
-A starter template for orb projects. Build, test, and publish orbs automatically on CircleCI with [Orb-Tools](https://circleci.com/orbs/registry/orb/circleci/orb-tools).
+CircleCI orb for building, testing, linting and deploying Go-based AWS Lambda functions.
+
+## Upgrading to 4.0.0
+
+4.0.0 drops the hand-built `nexbus/go-pulumi` image and runs every job on CircleCI convenience images instead, installing only the tools those images do not carry. Two changes need action in consumer repositories.
+
+**1. golangci-lint 1.58 to 2.12 (breaking).** The Go convenience image ships golangci-lint 2.12.x, whose configuration schema changed. A v1 configuration fails with:
+
+```
+can't load config: unsupported version of the configuration: ""
+```
+
+Add a version key to `.golangci.yml` and migrate any renamed settings per the [golangci-lint migration guide](https://golangci-lint.run/docs/product/migration-guide):
+
+```yaml
+version: "2"
+```
+
+**2. Go 1.22 to 1.26, and Node 20 to 22.** The `golang` executor now defaults to `cimg/go:1.26`, and the `node` executor to `cimg/node:22.20.0`. Node 20 reached end of life on 2026-04-30, and the pinned commitlint 21 requires Node >= 22.12.0. Pin a different tag if a project is not ready:
+
+```yaml
+jobs:
+  - aws-lambda-go/test:
+      executor:
+        name: aws-lambda-go/golang
+        tag: "1.25"
+```
+
+Also of note: `GOEXPERIMENT=nocoverageredesign` has been removed from the coverage check, because that experiment no longer exists in Go 1.24 and later and made `go` exit with `unknown GOEXPERIMENT coverageredesign`. The `go-pulumi-lint-gh` executor is gone; jobs now use `golang`, `node` or `base`. The `base` executor defaults to `cimg/base:current` rather than `cimg/base:stable`, because `stable` is published for amd64 only while the executor itself defaults to `arm.medium`. The release jobs override `resource_class` to an x86 class, so they were unaffected, but anything using the executor as-is needs a multi-arch tag.
 
 Additional READMEs are available in each directory.
 

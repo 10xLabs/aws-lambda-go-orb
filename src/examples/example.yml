@@ -3,7 +3,7 @@ description: >
 usage:
   version: 2.1
   orbs:
-    aws-lambda-go: nexbus/aws-lambda-go@3.25.3
+    aws-lambda-go: nexbus/aws-lambda-go@4.0.0
   workflows:
     build-test-deploy:
       jobs:
