@@ -26,6 +26,10 @@ workflows:
           exclude: RC010
           filters: *filters
       - orb-tools/pack:
+          # orb-tools/pack runs "circleci orb validate --token $CIRCLE_TOKEN",
+          # so it needs the publishing credentials even though it publishes
+          # nothing. The other step 1 jobs, continue included, do not.
+          context: orb-publishing
           filters: *filters
       - shellcheck/check:
           dir: ./src/scripts

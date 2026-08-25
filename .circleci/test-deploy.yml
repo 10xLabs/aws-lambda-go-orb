@@ -100,6 +100,8 @@ workflows:
       - integration-test-build-nested-output:
           filters: *filters
       - orb-tools/pack:
+          # Validates the packed orb via the API; needs CIRCLE_TOKEN.
+          context: orb-publishing
           filters: *release-filters
       - orb-tools/publish:
           orb_name: nexbus/aws-lambda-go
