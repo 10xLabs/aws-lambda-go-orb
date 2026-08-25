@@ -6,6 +6,24 @@
 
 CircleCI orb for building, testing, linting and deploying Go-based AWS Lambda functions.
 
+## Development versions
+
+Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released:
+
+- **`dev:<full-sha>`** from any branch other than `master`
+- **`dev:alpha`** from `master` only, alongside its `dev:<full-sha>`
+
+Pin one in a consumer's `.circleci/config.yml`:
+
+```yaml
+orbs:
+  aws-lambda-go: nexbus/aws-lambda-go@dev:alpha
+```
+
+`dev:alpha` is published from `master` alone on purpose. When every branch published it, the tag belonged to whichever branch built last, which is how it once ended up serving a feature-branch snapshot instead of `master`. Development versions expire 90 days after publication.
+
+Production versions are published only by pushing a `vX.Y.Z` tag; no branch publishes one.
+
 ## Upgrading to 4.0.0
 
 4.0.0 drops the hand-built `nexbus/go-pulumi` image and runs every job on CircleCI convenience images instead, installing only the tools those images do not carry. Two changes need action in consumer repositories.
