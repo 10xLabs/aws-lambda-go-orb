@@ -6,6 +6,33 @@
 
 CircleCI orb for building, testing, linting and deploying Go-based AWS Lambda functions.
 
+## Go build caching
+
+The `build`, `test`, `lint-code` and `lint` jobs cache Go's build cache (`~/.cache/go-build`), and the lint jobs additionally cache `~/.cache/golangci-lint`. Without this, every job starts cold and recompiles the whole dependency tree — on a typical consumer pipeline that is three separate full compiles: golangci-lint's type check plus one per build job.
+
+It is on by default and needs no configuration. Two parameters control it:
+
+| Parameter | Default | Purpose |
+|---|---|---|
+| `cache-go-build` | `true` | Set `false` to disable caching entirely |
+| `go-cache-key-file` | `vendor/modules.txt` | File whose checksum keys the cache |
+
+The cache is keyed on the dependency manifest rather than the commit, so it is rewritten only when dependencies change: your own packages recompile each run, the dependency tree stays warm. Keys include `{{ arch }}`, since cached objects are architecture specific.
+
+**A project that does not vendor must opt out**, because `{{ checksum }}` on a missing file fails the job:
+
+```yaml
+- aws-lambda-go/test:
+    cache-go-build: false
+```
+
+Or point it at a manifest that does exist:
+
+```yaml
+- aws-lambda-go/test:
+    go-cache-key-file: go.sum
+```
+
 ## Development versions
 
 Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released:

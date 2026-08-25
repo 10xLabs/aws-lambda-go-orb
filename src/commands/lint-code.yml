@@ -1,7 +1,56 @@
 description: >
   This lint the code using the defined golangci-lint config
 
+parameters:
+  cache-go-build:
+    description: >
+      Cache the Go build cache and the golangci-lint cache between jobs.
+      golangci-lint type checks the whole module, so without a cache it
+      recompiles the dependency tree on every run.
+      Disable it for a project that does not vendor its dependencies, because
+      the cache key is a checksum of the file named by go-cache-key-file and a
+      missing file fails the job.
+    type: boolean
+    default: true
+  go-cache-key-file:
+    description: >
+      File whose checksum keys the caches. Keying on the dependency manifest
+      rather than the commit means they are rewritten only when dependencies
+      change.
+    type: string
+    default: vendor/modules.txt
+
 steps:
+  - when:
+      condition: << parameters.cache-go-build >>
+      steps:
+        - restore_cache:
+            name: Restore Go build cache
+            keys:
+              # {{ arch }} matters: the cached objects are architecture specific
+              # and cache keys are immutable.
+              - go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+              - go-build-v1-{{ arch }}-
+        - restore_cache:
+            name: Restore golangci-lint cache
+            keys:
+              - golangci-lint-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+              - golangci-lint-v1-{{ arch }}-
   - run:
       name: Lint code
       command: << include(scripts/lint_code.sh) >>
+  - when:
+      condition: << parameters.cache-go-build >>
+      steps:
+        - save_cache:
+            name: Store Go build cache
+            key: go-build-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+            paths:
+              - ~/.cache/go-build
+        # Kept under its own key: these are golangci-lint's own analysis results,
+        # not objects shared with "go build".
+        - save_cache:
+            name: Store golangci-lint cache
+            key: golangci-lint-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+            paths:
+              - ~/.cache/golangci-lint

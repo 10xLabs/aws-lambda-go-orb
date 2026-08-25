@@ -10,10 +10,20 @@ parameters:
       example a specific Go or Node version.
     type: executor
     default: golang
+  cache-go-build:
+    description: Cache the Go build and golangci-lint caches between jobs. Disable for a project that does not vendor.
+    type: boolean
+    default: true
+  go-cache-key-file:
+    description: File whose checksum keys the caches.
+    type: string
+    default: vendor/modules.txt
 
 steps:
   - checkout
-  - lint-code
+  - lint-code:
+      cache-go-build: << parameters.cache-go-build >>
+      go-cache-key-file: << parameters.go-cache-key-file >>
   - notify:
       event: fail
       template: basic_fail_1
