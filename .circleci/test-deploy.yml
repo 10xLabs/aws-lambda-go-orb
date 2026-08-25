@@ -33,7 +33,7 @@ jobs:
           proves the architecture reached the compiler.
         type: string
     docker:
-      - image: cimg/go:1.22
+      - image: cimg/go:1.27
     steps:
       - run:
           name: Scaffold a vendored Go Lambda project
@@ -62,7 +62,7 @@ jobs:
   # to commit deploy/, and package.sh has to create it before resolving the path.
   integration-test-build-nested-output:
     docker:
-      - image: cimg/go:1.22
+      - image: cimg/go:1.27
     steps:
       - run:
           name: Scaffold a vendored Go Lambda project in a subdirectory
