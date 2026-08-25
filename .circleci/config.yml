@@ -43,7 +43,11 @@ workflows:
       # it were published. No development version is published: nothing outside
       # this repository consumes dev orbs.
       - orb-tools/continue:
-          orb_name: nexbus/aws-lambda-go
+          # Reference name only, no namespace: this is the key under "orbs" in
+          # test-deploy.yml that the packed orb source gets injected into.
+          # Passing "nexbus/aws-lambda-go" here matches no key, so nothing is
+          # injected and every aws-lambda-go/* step fails to resolve.
+          orb_name: aws-lambda-go
           pipeline_number: << pipeline.number >>
           vcs_type: << pipeline.project.type >>
           requires:
