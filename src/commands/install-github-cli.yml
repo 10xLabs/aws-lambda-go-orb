@@ -1,0 +1,28 @@
+description: >
+  Installs the GitHub CLI and puts it on the PATH, restoring it from the cache
+  when the requested version has been installed by an earlier build.
+  The release tarball is used rather than apt so no sudo is needed.
+
+parameters:
+  version:
+    description: GitHub CLI version to install, without the leading "v".
+    type: string
+    default: "2.98.0"
+
+steps:
+  - restore_cache:
+      name: Restore GitHub CLI
+      keys:
+        # {{ arch }} matters: this command downloads a different asset per
+        # architecture and cache keys are immutable.
+        - github-cli-v1-{{ arch }}-<< parameters.version >>
+  - run:
+      name: Install GitHub CLI
+      environment:
+        GH_VERSION: << parameters.version >>
+      command: << include(scripts/install_github_cli.sh) >>
+  - save_cache:
+      name: Store GitHub CLI
+      key: github-cli-v1-{{ arch }}-<< parameters.version >>
+      paths:
+        - ~/.local

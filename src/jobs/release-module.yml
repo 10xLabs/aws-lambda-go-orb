@@ -1,9 +1,15 @@
 description: >
   This job creates a module release
 
-executor: go-pulumi-lint-gh
+executor: << parameters.executor >>
 resource_class: medium
 parameters:
+  executor:
+    description: >
+      Executor this job runs on. Override it to pin a different image tag, for
+      example a specific Go or Node version.
+    type: executor
+    default: base
   module_name:
     type: string
   module_path:

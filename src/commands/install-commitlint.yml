@@ -1,0 +1,26 @@
+description: >
+  Installs commitlint and the conventional config into the working directory so
+  the "npx commitlint" call in lint-commits resolves locally instead of
+  downloading the packages on every invocation.
+
+parameters:
+  version:
+    description: commitlint version to install, for both @commitlint/cli and @commitlint/config-conventional.
+    type: string
+    default: "21.2.2"
+
+steps:
+  - restore_cache:
+      name: Restore commitlint
+      keys:
+        - commitlint-v1-<< parameters.version >>
+  - run:
+      name: Install commitlint
+      environment:
+        COMMITLINT_VERSION: << parameters.version >>
+      command: << include(scripts/install_commitlint.sh) >>
+  - save_cache:
+      name: Store commitlint
+      key: commitlint-v1-<< parameters.version >>
+      paths:
+        - node_modules

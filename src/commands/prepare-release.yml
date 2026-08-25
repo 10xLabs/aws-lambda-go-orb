@@ -2,8 +2,9 @@ description: >
   This create or update the release pull request
 
 steps:
+  - install-github-cli
   - run:
-      name: Install Github CLI
+      name: Authenticate GitHub CLI
       command: << include(scripts/authenticate_git.sh) >>
   - run:
       name: Get release type

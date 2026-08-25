@@ -2,6 +2,7 @@ description: >
   This lint commits using conventional commits format
 
 steps:
+  - install-commitlint
   - run:
       name: Configure commit linter
       command: << include(scripts/configure_commit_linter.sh) >>

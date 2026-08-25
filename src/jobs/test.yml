@@ -1,10 +1,16 @@
 description: >
   This job run the AWS Lambda Go function tests
 
-executor: go-pulumi-lint-gh
+executor: << parameters.executor >>
 resource_class: xlarge
 
 parameters:
+  executor:
+    description: >
+      Executor this job runs on. Override it to pin a different image tag, for
+      example a specific Go or Node version.
+    type: executor
+    default: golang
   minimum-coverage:
     type: string
     default: "50.00"
