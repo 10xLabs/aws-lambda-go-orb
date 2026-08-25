@@ -14,7 +14,10 @@ steps:
   - restore_cache:
       name: Restore Pulumi CLI
       keys:
-        - pulumi-cli-v1-<< parameters.version >>
+        # {{ arch }} matters: the cached binary is architecture specific and
+        # cache keys are immutable, so a shared key would hand one architecture
+        # the other's binary.
+        - pulumi-cli-v1-{{ arch }}-<< parameters.version >>
   - run:
       name: Install Pulumi CLI
       environment:
@@ -22,6 +25,6 @@ steps:
       command: << include(scripts/install_pulumi_cli.sh) >>
   - save_cache:
       name: Store Pulumi CLI
-      key: pulumi-cli-v1-<< parameters.version >>
+      key: pulumi-cli-v1-{{ arch }}-<< parameters.version >>
       paths:
         - ~/.pulumi

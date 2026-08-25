@@ -86,8 +86,9 @@ jobs:
             zip -sf dist/nested/lambda.zip | grep -Eq '^[[:space:]]+main$'
             ! zip -sf dist/nested/lambda.zip | grep -q 'build/bin'
 
-  # Covers test.sh, export_coverage.sh and check_coverage.sh, all of which rely
-  # on the gotestsum that the Go convenience image ships.
+  # Covers the three scripts behind the test command: test.sh, which uses the
+  # gotestsum the Go convenience image ships, export_coverage.sh, which uses
+  # "go tool cover", and check_coverage.sh, which re-runs "go test -cover".
   integration-test-test:
     executor: aws-lambda-go/golang
     steps:

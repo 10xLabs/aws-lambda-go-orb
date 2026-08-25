@@ -22,7 +22,7 @@ Add a version key to `.golangci.yml` and migrate any renamed settings per the [g
 version: "2"
 ```
 
-**2. Go 1.22 to 1.26.** The `golang` executor now defaults to `cimg/go:1.26`. Pin a different minor if a project is not ready:
+**2. Go 1.22 to 1.26, and Node 20 to 22.** The `golang` executor now defaults to `cimg/go:1.26`, and the `node` executor to `cimg/node:22.20.0`. Node 20 reached end of life on 2026-04-30, and the pinned commitlint 21 requires Node >= 22.12.0. Pin a different tag if a project is not ready:
 
 ```yaml
 jobs:
@@ -32,7 +32,7 @@ jobs:
         tag: "1.25"
 ```
 
-Also of note: `GOEXPERIMENT=nocoverageredesign` has been removed from the coverage check, because that experiment no longer exists in Go 1.24 and later and made `go` exit with `unknown GOEXPERIMENT coverageredesign`. The `go-pulumi-lint-gh` executor is gone; jobs now use `golang`, `node` or `base`. The `base` executor defaults to `cimg/base:current` rather than `cimg/base:stable`, because `stable` is published for amd64 only and these jobs run on an arm resource class.
+Also of note: `GOEXPERIMENT=nocoverageredesign` has been removed from the coverage check, because that experiment no longer exists in Go 1.24 and later and made `go` exit with `unknown GOEXPERIMENT coverageredesign`. The `go-pulumi-lint-gh` executor is gone; jobs now use `golang`, `node` or `base`. The `base` executor defaults to `cimg/base:current` rather than `cimg/base:stable`, because `stable` is published for amd64 only while the executor itself defaults to `arm.medium`. The release jobs override `resource_class` to an x86 class, so they were unaffected, but anything using the executor as-is needs a multi-arch tag.
 
 Additional READMEs are available in each directory.
 

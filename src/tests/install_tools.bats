@@ -83,8 +83,15 @@ fake_tool() {
     esac
 }
 
-@test "commitlint: reuses the cached install when node_modules is present" {
-    fake_tool "node_modules/.bin/commitlint" "21.2.2"
+# fake_package <name> <version> — a node_modules entry with a version field.
+fake_package() {
+    mkdir -p "node_modules/$1"
+    printf '{"name":"%s","version":"%s"}\n' "$1" "$2" > "node_modules/$1/package.json"
+}
+
+@test "commitlint: reuses the cached install when both packages match the version" {
+    fake_package "@commitlint/cli" "21.2.2"
+    fake_package "@commitlint/config-conventional" "21.2.2"
     fake_tool "$WORKDIR/stub/npx" "21.2.2"
 
     COMMITLINT_VERSION=21.2.2 run bash "$SCRIPTS/install_commitlint.sh"
@@ -94,6 +101,26 @@ fake_tool() {
     [ ! -f "$WORKDIR/network-calls" ]
 }
 
+@test "commitlint: reinstalls when the cached cli is a different version" {
+    fake_package "@commitlint/cli" "20.1.0"
+    fake_package "@commitlint/config-conventional" "21.2.2"
+    fake_tool "$WORKDIR/stub/npx" "21.2.2"
+
+    COMMITLINT_VERSION=21.2.2 run bash "$SCRIPTS/install_commitlint.sh"
+
+    [[ "$output" == *"Installing commitlint 21.2.2"* ]]
+    grep -Fq "@commitlint/cli@21.2.2" "$WORKDIR/network-calls"
+}
+
+@test "commitlint: reinstalls when only the cli is cached and the config is missing" {
+    fake_package "@commitlint/cli" "21.2.2"
+    fake_tool "$WORKDIR/stub/npx" "21.2.2"
+
+    COMMITLINT_VERSION=21.2.2 run bash "$SCRIPTS/install_commitlint.sh"
+
+    grep -Fq "@commitlint/config-conventional@21.2.2" "$WORKDIR/network-calls"
+}
+
 @test "commitlint: installs both the cli and the conventional config when absent" {
     fake_tool "$WORKDIR/stub/npx" "21.2.2"
 
@@ -101,4 +128,48 @@ fake_tool() {
 
     grep -Fq "@commitlint/cli@21.2.2" "$WORKDIR/network-calls"
     grep -Fq "@commitlint/config-conventional@21.2.2" "$WORKDIR/network-calls"
+}
+
+# Tests for check_coverage.sh, whose gate must not be reachable when the test
+# run itself failed. "go" is stubbed to control the exit code and the output the
+# script parses.
+@test "coverage: fails when go test fails, even if a package reported coverage" {
+    cat > "$WORKDIR/stub/go" <<'STUB'
+#!/usr/bin/env bash
+echo "ok  	m/pass	0.002s	coverage: 100.0% of statements"
+echo "FAIL	m/fail	0.003s"
+exit 1
+STUB
+    chmod +x "$WORKDIR/stub/go"
+
+    MINIMUM_COVERAGE=50.00 run bash "$SCRIPTS/check_coverage.sh"
+
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"go test failed"* ]]
+    [[ "$output" != *"Coverage check passed"* ]]
+}
+
+@test "coverage: passes when go test succeeds and coverage clears the minimum" {
+    cat > "$WORKDIR/stub/go" <<'STUB'
+#!/usr/bin/env bash
+echo "ok  	m/pass	0.002s	coverage: 90.0% of statements"
+STUB
+    chmod +x "$WORKDIR/stub/go"
+
+    MINIMUM_COVERAGE=50.00 run bash "$SCRIPTS/check_coverage.sh"
+
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Coverage check passed"* ]]
+}
+
+@test "coverage: fails when coverage is below the minimum" {
+    cat > "$WORKDIR/stub/go" <<'STUB'
+#!/usr/bin/env bash
+echo "ok  	m/pass	0.002s	coverage: 10.0% of statements"
+STUB
+    chmod +x "$WORKDIR/stub/go"
+
+    MINIMUM_COVERAGE=50.00 run bash "$SCRIPTS/check_coverage.sh"
+
+    [ "$status" -ne 0 ]
 }

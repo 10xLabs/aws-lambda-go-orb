@@ -13,7 +13,9 @@ steps:
   - restore_cache:
       name: Restore GitHub CLI
       keys:
-        - github-cli-v1-<< parameters.version >>
+        # {{ arch }} matters: this command downloads a different asset per
+        # architecture and cache keys are immutable.
+        - github-cli-v1-{{ arch }}-<< parameters.version >>
   - run:
       name: Install GitHub CLI
       environment:
@@ -21,6 +23,6 @@ steps:
       command: << include(scripts/install_github_cli.sh) >>
   - save_cache:
       name: Store GitHub CLI
-      key: github-cli-v1-<< parameters.version >>
+      key: github-cli-v1-{{ arch }}-<< parameters.version >>
       paths:
         - ~/.local

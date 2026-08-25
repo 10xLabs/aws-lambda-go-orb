@@ -1,9 +1,15 @@
 description: >
   This job build the AWS Lambda Go function executable
 
-executor: golang
+executor: << parameters.executor >>
 resource_class: xlarge
 parameters:
+  executor:
+    description: >
+      Executor this job runs on. Override it to pin a different image tag, for
+      example a specific Go or Node version.
+    type: executor
+    default: golang
   build-input-file:
     type: string
     default: main.go
