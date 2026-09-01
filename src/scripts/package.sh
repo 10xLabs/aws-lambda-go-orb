@@ -22,7 +22,15 @@ OUTPUT_PARENT_DIR="$(dirname "$OUTPUT_FILE")"
 mkdir -p "$OUTPUT_PARENT_DIR"
 OUTPUT_REALPATH="$(cd "$OUTPUT_PARENT_DIR" && pwd)/$(basename "$OUTPUT_FILE")"
 
-cd "$INPUT_PARENT_DIR" && zip "$OUTPUT_REALPATH" "$INPUT_FILE_PATH"
+# Pulumi hashes the raw bytes of the zip, so the container's own metadata -- DOS
+# timestamp, the UT/ux extra fields, the Unix mode -- becomes part of the resource
+# identity and makes every build look like a code change. Pin all of it.
+# TZ has to be set on zip too: Info-ZIP writes the DOS field via localtime().
+cd "$INPUT_PARENT_DIR"
+rm -f "$OUTPUT_REALPATH"
+chmod 755 "$INPUT_FILE_PATH"
+TZ=UTC touch -t 198001020000 "$INPUT_FILE_PATH"
+TZ=UTC zip -X "$OUTPUT_REALPATH" "$INPUT_FILE_PATH"
 
 if [ -f "$OUTPUT_REALPATH" ]; then
     echo "Package created successfully: $OUTPUT_REALPATH"

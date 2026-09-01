@@ -48,6 +48,57 @@ setup() {
     [ -f deploy/lambda.zip ]
 }
 
+@test "package: produces byte-identical archives across runs" {
+    # Pulumi hashes the raw zip bytes, so anything the container records about
+    # the build -- clock, umask, uid -- shows up as a spurious code change.
+    # The rebuild is simulated by re-stamping identical content, which is what
+    # `go build` does to the binary on every run.
+    echo "binary" > main
+    touch -t 202601011234 main
+    chmod 700 main
+
+    INPUT_FILE=main OUTPUT_FILE=deploy/lambda.zip run bash "$SCRIPT"
+    [ "$status" -eq 0 ]
+    first="$(shasum -a 256 < deploy/lambda.zip)"
+
+    echo "binary" > main
+    touch -t 202608302345 main
+    chmod 744 main
+
+    INPUT_FILE=main OUTPUT_FILE=deploy/lambda.zip run bash "$SCRIPT"
+    [ "$status" -eq 0 ]
+    second="$(shasum -a 256 < deploy/lambda.zip)"
+
+    [ "$first" = "$second" ]
+}
+
+@test "package: pins the timestamp, mode and extra fields in the archive" {
+    echo "binary" > main
+    touch -t 202601011234 main
+    chmod 700 main
+
+    INPUT_FILE=main OUTPUT_FILE=deploy/lambda.zip run bash "$SCRIPT"
+
+    [ "$status" -eq 0 ]
+    zipinfo -v deploy/lambda.zip | grep -Fq "1980 Jan 2 00:00:00"
+    zipinfo -v deploy/lambda.zip | grep -Fq "length of extra field:                          0 bytes"
+    zipinfo -v deploy/lambda.zip | grep -Fq "(100755 octal)"
+}
+
+@test "package: replaces an existing archive rather than updating it" {
+    # zip updates in place, so a stale entry would survive and keep its bytes.
+    mkdir -p deploy
+    echo "stale" > leftover
+    zip -q deploy/lambda.zip leftover
+    echo "binary" > main
+
+    INPUT_FILE=main OUTPUT_FILE=deploy/lambda.zip run bash "$SCRIPT"
+
+    [ "$status" -eq 0 ]
+    run zip -sf deploy/lambda.zip
+    [[ "$output" != *leftover* ]]
+}
+
 @test "package: fails when the input binary is missing" {
     INPUT_FILE=main OUTPUT_FILE=deploy/lambda.zip run bash "$SCRIPT"
 
