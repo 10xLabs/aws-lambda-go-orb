@@ -17,11 +17,17 @@ setup() {
     unset GOTOOLCHAIN
 }
 
-# stub_go <exit-code> — writes a fake `go` that logs its argv one-per-line to
-# go-args and, on success, creates the file named after -o.
+# stub_go <exit-code> [installed-version] — writes a fake `go` that answers
+# `env GOVERSION`, logs its argv one-per-line to go-args and, on success, creates
+# the file named after -o.
 stub_go() {
+    local installed="${2:-go1.26.7}"
     cat > "$WORKDIR/stub/go" <<STUB
 #!/usr/bin/env bash
+if [ "\$1 \$2" = "env GOVERSION" ]; then
+    echo "$installed"
+    exit 0
+fi
 printf '%s\n' "\$@" > "$WORKDIR/go-args"
 env | grep -E '^GO|^CGO_ENABLED=' | sort > "$WORKDIR/go-env"
 if [ "$1" -ne 0 ]; then
@@ -83,6 +89,30 @@ STUB
     [ "$status" -eq 0 ]
     run grep -q "^GOTOOLCHAIN=" "$WORKDIR/go-env"
     [ "$status" -ne 0 ]
+}
+
+@test "build: refuses to downgrade to a stale toolchain directive" {
+    # Many repos carry a directive left over from an old `go mod tidy`. Honouring it
+    # would build production code with an end-of-life compiler.
+    stub_go 0 go1.26.7
+    printf 'module example.com/x\n\ngo 1.22\n\ntoolchain go1.22.2\n' > go.mod
+
+    INPUT_FILE=main.go OUTPUT_FILE=main ARCHITECTURE=arm64 run bash "$SCRIPT"
+
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"older than go1.26.7"* ]]
+    run grep -q "^GOTOOLCHAIN=" "$WORKDIR/go-env"
+    [ "$status" -ne 0 ]
+}
+
+@test "build: pins a directive newer than the installed toolchain" {
+    stub_go 0 go1.26.0
+    printf 'module example.com/x\n\ngo 1.25.1\n\ntoolchain go1.26.7\n' > go.mod
+
+    INPUT_FILE=main.go OUTPUT_FILE=main ARCHITECTURE=arm64 run bash "$SCRIPT"
+
+    [ "$status" -eq 0 ]
+    grep -Fxq "GOTOOLCHAIN=go1.26.7" "$WORKDIR/go-env"
 }
 
 @test "build: honours a nested output path" {
