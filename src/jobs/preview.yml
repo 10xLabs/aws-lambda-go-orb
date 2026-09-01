@@ -22,6 +22,13 @@ parameters:
   setup-remote-docker:
     type: boolean
     default: false
+  allow-destroy:
+    description: >
+      Let the preview pass when the plan deletes or replaces existing resources.
+      Off by default: a deletion discards whatever the resource holds, and it is
+      easy to miss in a long plan.
+    type: boolean
+    default: false
 
 steps:
   - checkout
@@ -30,6 +37,7 @@ steps:
       stack-name: << parameters.stack-name >>
       install-pulumi-deps: << parameters.install-pulumi-deps >>
       setup-remote-docker: << parameters.setup-remote-docker >>
+      allow-destroy: << parameters.allow-destroy >>
   - notify:
       event: fail
       template: basic_fail_1

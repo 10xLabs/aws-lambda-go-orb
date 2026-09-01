@@ -14,6 +14,13 @@ parameters:
   setup-remote-docker:
     type: boolean
     default: false
+  allow-destroy:
+    description: >
+      Let the preview pass when the plan deletes or replaces existing resources.
+      Off by default: a deletion discards whatever the resource holds, and it is
+      easy to miss in a long plan.
+    type: boolean
+    default: false
 
 steps:
   - attach_workspace:
@@ -55,4 +62,5 @@ steps:
       name: Pulumi preview
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
+        ALLOW_DESTROY: << parameters.allow-destroy >>
       command: << include(scripts/pulumi_preview.sh) >>
