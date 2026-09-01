@@ -34,3 +34,4 @@ steps:
       root: .
       paths:
         - << parameters.package-output-file >>
+        - << parameters.build-output-file >>
