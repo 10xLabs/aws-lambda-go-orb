@@ -40,6 +40,15 @@ fake_tool() {
     grep -Fq ".pulumi/bin" "$BASH_ENV"
 }
 
+@test "pulumi: puts the update-check skip on the PATH export for later steps" {
+    fake_tool "$HOME/.pulumi/bin/pulumi" "v3.259.0"
+
+    PULUMI_VERSION=3.259.0 run bash "$SCRIPTS/install_pulumi_cli.sh"
+
+    [ "$status" -eq 0 ]
+    grep -Fxq "export PULUMI_SKIP_UPDATE_CHECK=true" "$BASH_ENV"
+}
+
 @test "pulumi: downloads when the cached CLI is a different version" {
     fake_tool "$HOME/.pulumi/bin/pulumi" "v3.100.0"
 

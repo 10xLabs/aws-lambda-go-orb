@@ -22,6 +22,14 @@ parameters:
   package-output-file:
     type: string
     default: deploy/lambda.zip
+  cache-go-build:
+    description: Cache the Go build cache between jobs. Disable for a project that does not vendor.
+    type: boolean
+    default: true
+  go-cache-key-file:
+    description: File whose checksum keys the Go build cache.
+    type: string
+    default: vendor/modules.txt
 
 steps:
   - checkout
@@ -30,6 +38,8 @@ steps:
       build-output-file: << parameters.build-output-file >>
       build-architecture: << parameters.build-architecture >>
       package-output-file: << parameters.package-output-file >>
+      cache-go-build: << parameters.cache-go-build >>
+      go-cache-key-file: << parameters.go-cache-key-file >>
   - notify:
       event: fail
       template: basic_fail_1

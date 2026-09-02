@@ -6,12 +6,39 @@
 
 CircleCI orb for building, testing, linting and deploying Go-based AWS Lambda functions.
 
+## Go build caching
+
+The `build`, `test`, `lint-code` and `lint` jobs cache Go's build cache (`~/.cache/go-build`), and the lint jobs additionally cache `~/.cache/golangci-lint`. Without this, every job starts cold and recompiles the whole dependency tree — on a typical consumer pipeline that is three separate full compiles: golangci-lint's type check plus one per build job.
+
+It is on by default and needs no configuration. Two parameters control it:
+
+| Parameter | Default | Purpose |
+|---|---|---|
+| `cache-go-build` | `true` | Set `false` to disable caching entirely |
+| `go-cache-key-file` | `vendor/modules.txt` | File whose checksum keys the cache |
+
+The cache is keyed on the dependency manifest rather than the commit, so it is rewritten only when dependencies change: your own packages recompile each run, the dependency tree stays warm. Keys include `{{ arch }}`, since cached objects are architecture specific.
+
+**A project that does not vendor must opt out**, because `{{ checksum }}` on a missing file fails the job:
+
+```yaml
+- aws-lambda-go/test:
+    cache-go-build: false
+```
+
+Or point it at a manifest that does exist:
+
+```yaml
+- aws-lambda-go/test:
+    go-cache-key-file: go.sum
+```
+
 ## Development versions
 
-Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released:
+Every branch build publishes a development version of the orb so consumer repositories can test a change before it is released. Two tags are published on each build:
 
-- **`dev:<full-sha>`** from any branch other than `master`
-- **`dev:alpha`** from `master` only, alongside its `dev:<full-sha>`
+- **`dev:alpha`** — tracks the most recent branch build
+- **`dev:<full-sha>`** — a deterministic pin for that exact commit
 
 Pin one in a consumer's `.circleci/config.yml`:
 
@@ -20,7 +47,12 @@ orbs:
   aws-lambda-go: nexbus/aws-lambda-go@dev:alpha
 ```
 
-`dev:alpha` is published from `master` alone on purpose. When every branch published it, the tag belonged to whichever branch built last, which is how it once ended up serving a feature-branch snapshot instead of `master`. Development versions expire 90 days after publication.
+`dev:alpha` is the convenient one: push an orb branch, and the consumer picks it up on its next pipeline with no config change. Because every branch publishes it, the tag belongs to whichever branch built last — so when two branches are in flight, pin `dev:<full-sha>` instead.
+
+Two things to know when testing against a development version:
+
+- **Trigger a new pipeline, don't rerun a failed one.** Orbs resolve when a pipeline's config is compiled, so a rerun reuses the version that was current when the pipeline was created.
+- Development versions expire 90 days after publication.
 
 Production versions are published only by pushing a `vX.Y.Z` tag; no branch publishes one.
 

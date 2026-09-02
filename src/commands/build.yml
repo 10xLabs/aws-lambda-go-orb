@@ -14,8 +14,40 @@ parameters:
   package-output-file:
     type: string
     default: deploy/lambda.zip
+  cache-go-build:
+    description: >
+      Cache the Go build cache between jobs. Every job otherwise starts with a
+      cold cache and recompiles the whole dependency tree.
+      Disable it for a project that does not vendor its dependencies, because
+      the cache key is a checksum of the file named by go-cache-key-file and a
+      missing file fails the job.
+    type: boolean
+    default: true
+  go-cache-key-file:
+    description: >
+      File whose checksum keys the Go build cache. Keying on the dependency
+      manifest rather than the commit means the cache is rewritten only when
+      dependencies change.
+    type: string
+    default: vendor/modules.txt
 
 steps:
+  - when:
+      condition: << parameters.cache-go-build >>
+      steps:
+        - restore_cache:
+            name: Restore Go build cache
+            keys:
+              # Two architectures matter here and they are not the same one.
+              # {{ arch }} is the host the job runs on; build-architecture is
+              # what the binary is cross-compiled for, and Go caches compiled
+              # objects per target. A key naming only the host lets a native
+              # compile (lint, test) and a cross compile share one entry, where
+              # the cross compile gets no reuse at all — and because cache keys
+              # are immutable, whichever job saves first locks the others out
+              # of ever storing their own.
+              - go-target-<< parameters.build-architecture >>-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+              - go-target-<< parameters.build-architecture >>-v1-{{ arch }}-
   - run:
       name: Build executable
       environment:
@@ -29,6 +61,14 @@ steps:
         INPUT_FILE: << parameters.build-output-file >>
         OUTPUT_FILE: << parameters.package-output-file >>
       command: << include(scripts/package.sh) >>
+  - when:
+      condition: << parameters.cache-go-build >>
+      steps:
+        - save_cache:
+            name: Store Go build cache
+            key: go-target-<< parameters.build-architecture >>-v1-{{ arch }}-{{ checksum "<< parameters.go-cache-key-file >>" }}
+            paths:
+              - ~/.cache/go-build
   - persist_to_workspace:
       name: Store package
       root: .

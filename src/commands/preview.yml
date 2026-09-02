@@ -51,8 +51,24 @@ steps:
         - setup_remote_docker:
             version: default
             docker_layer_caching: true
+  # Pulumi downloads its provider plugins on first use and they are large: a
+  # program pulling aws, awsx, docker and mongodbatlas re-fetches all of them on
+  # every run otherwise. install-pulumi-cli caches ~/.pulumi, but it saves
+  # before this step runs, so the plugins are never in that archive.
+  # Keyed on the lockfile, since the plugin versions come from the program's
+  # own dependencies.
+  - restore_cache:
+      name: Restore Pulumi plugins
+      keys:
+        - pulumi-plugins-v1-{{ arch }}-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+        - pulumi-plugins-v1-{{ arch }}-
   - run:
       name: Pulumi preview
       environment:
         WORKING_DIRECTORY: << parameters.working-directory >>
       command: << include(scripts/pulumi_preview.sh) >>
+  - save_cache:
+      name: Store Pulumi plugins
+      key: pulumi-plugins-v1-{{ arch }}-{{ checksum "<< parameters.working-directory >>/yarn.lock" }}
+      paths:
+        - ~/.pulumi/plugins

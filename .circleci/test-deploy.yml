@@ -86,6 +86,30 @@ jobs:
             zip -sf dist/nested/lambda.zip | grep -Eq '^[[:space:]]+main$'
             ! zip -sf dist/nested/lambda.zip | grep -q 'build/bin'
 
+  # The Go build cache is keyed on a checksum of vendor/modules.txt, and
+  # {{ checksum }} on a missing file fails the job outright. A project that does
+  # not vendor has to be able to opt out, so this fixture deliberately omits the
+  # vendor directory and asserts the build still succeeds.
+  integration-test-build-without-vendor:
+    executor: aws-lambda-go/golang
+    steps:
+      - run:
+          name: Scaffold a Go project with no vendor directory
+          command: |
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'package main\n\nfunc main() {}\n' > main.go
+            test ! -e vendor/modules.txt
+      - aws-lambda-go/build:
+          cache-go-build: false
+          build-input-file: main.go
+          build-output-file: main
+          package-output-file: deploy/lambda.zip
+      - run:
+          name: Verify the artifact was produced without any cache step
+          command: |
+            test -f deploy/lambda.zip
+            zip -sf deploy/lambda.zip | grep -Eq '^[[:space:]]+main$'
+
   # Covers the three scripts behind the test command: test.sh, which uses the
   # gotestsum the Go convenience image ships, export_coverage.sh, which uses
   # "go tool cover", and check_coverage.sh, which re-runs "go test -cover".
@@ -170,6 +194,8 @@ workflows:
           filters: *filters
       - integration-test-build-nested-output:
           filters: *filters
+      - integration-test-build-without-vendor:
+          filters: *filters
       - integration-test-test:
           filters: *filters
       - integration-test-lint-code:
@@ -195,6 +221,7 @@ workflows:
             - integration-test-build-amd64
             - integration-test-build-arm64
             - integration-test-build-nested-output
+            - integration-test-build-without-vendor
             - integration-test-test
             - integration-test-lint-code
             - integration-test-install-pulumi-cli
