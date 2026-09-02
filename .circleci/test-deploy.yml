@@ -45,22 +45,25 @@ jobs:
             printf 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("aws-lambda-go orb integration fixture")\n}\n' > main.go
       - aws-lambda-go/build:
           build-input-file: main.go
-          build-output-file: main
+          # Both output paths are unique per architecture: the build command
+          # persists the binary and the archive to the workspace, and
+          # orb-tools/publish attaches the layers of every job it requires, so a
+          # path shared between two builds fails the publish job with
+          # "Concurrent upstream jobs persisted the same file(s)".
+          build-output-file: build/<< parameters.architecture >>/main
           build-architecture: << parameters.architecture >>
-          # Unique per architecture: the build command persists this path to the
-          # workspace, and orb-tools/publish attaches the layers of every job it
-          # requires, so a shared path would collide across the two builds.
           package-output-file: deploy/lambda-<< parameters.architecture >>.zip
       - run:
           name: Verify the packaged artifact
           command: |
             PACKAGE="deploy/lambda-<< parameters.architecture >>.zip"
+            BINARY="build/<< parameters.architecture >>/main"
             test -f "$PACKAGE"
             # zip -sf, not unzip: the orb already requires zip, unzip is not guaranteed.
             zip -sf "$PACKAGE" | grep -Eq '^[[:space:]]+main$'
-            ELF_MAGIC=$(head -c 4 main | od -An -tx1 | tr -d ' \n')
+            ELF_MAGIC=$(head -c 4 "$BINARY" | od -An -tx1 | tr -d ' \n')
             test "$ELF_MAGIC" = 7f454c46
-            ELF_MACHINE=$(dd if=main bs=1 skip=18 count=2 2>/dev/null | od -An -tx1 | tr -d ' \n')
+            ELF_MACHINE=$(dd if="$BINARY" bs=1 skip=18 count=2 2>/dev/null | od -An -tx1 | tr -d ' \n')
             test "$ELF_MACHINE" = "<< parameters.elf-machine >>"
 
   # The output directory is deliberately absent here: consumers are not required
@@ -102,7 +105,9 @@ jobs:
       - aws-lambda-go/build:
           cache-go-build: false
           build-input-file: main.go
-          build-output-file: main
+          # Not "main": see the note on integration-test-build. The workspace
+          # paths must be unique across every job orb-tools/publish requires.
+          build-output-file: build/novendor/main
           package-output-file: deploy/lambda.zip
       - run:
           name: Verify the artifact was produced without any cache step
