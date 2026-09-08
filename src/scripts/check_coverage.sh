@@ -15,8 +15,10 @@ if [ "$GO_TEST_EXIT_CODE" -ne 0 ]; then
 fi
 
 # Extract only lines with actual coverage percentages (not "no test files")
-# Look for lines that contain "ok" and "coverage:" followed by a percentage
-COVERAGE_VALUES=$(echo "$TEST_OUTPUT" | grep "ok" | grep "coverage:" | sed -n 's/.*coverage: \([0-9.]*\)%.*/\1/p')
+# Only `go test` result lines start with "ok" at column 0; the match must be
+# anchored or a package path containing those letters (invoker, booking, tokens)
+# is picked up as if it were a result line.
+COVERAGE_VALUES=$(echo "$TEST_OUTPUT" | grep -E '^ok[[:space:]]' | grep "coverage:" | sed -n 's/.*coverage: \([0-9.]*\)%.*/\1/p')
 
 if [ -z "$COVERAGE_VALUES" ]; then
     echo "No packages with test coverage found"
@@ -30,7 +32,7 @@ MINIMUM_INT=${MINIMUM_COVERAGE%.*}
 
 echo ""
 echo "Packages with tests:"
-echo "$TEST_OUTPUT" | grep "ok" | grep "coverage:"
+echo "$TEST_OUTPUT" | grep -E '^ok[[:space:]]' | grep "coverage:"
 echo ""
 echo "Average coverage: ${CURRENT_COVERAGE}%"
 echo "Minimum required: ${MINIMUM_COVERAGE}%"

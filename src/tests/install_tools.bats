@@ -182,3 +182,25 @@ STUB
 
     [ "$status" -ne 0 ]
 }
+
+@test "coverage: ignores a package path that merely contains \"ok\"" {
+    # Regression: an unanchored grep "ok" matched the 0.0% line of
+    # internal/pkg/invoker, which has no test files, and dragged the average
+    # from 87.5% to 58.3% (currencies-handler build 4416). "go test -cover"
+    # reports a package with no test files as a tab-indented line carrying
+    # neither an "ok" nor a "?" prefix, so only anchoring the match to a real
+    # result line keeps it out of the average.
+    cat > "$WORKDIR/stub/go" <<'STUB'
+#!/usr/bin/env bash
+echo "ok  	github.com/10xLabs/currencies-handler/internal/api/admin/graphql/resolver	0.027s	coverage: 85.2% of statements"
+echo "ok  	github.com/10xLabs/currencies-handler/internal/handler	0.027s	coverage: 89.8% of statements"
+printf '\t%s\t\tcoverage: 0.0%% of statements\n' "github.com/10xLabs/currencies-handler/internal/pkg/invoker"
+STUB
+    chmod +x "$WORKDIR/stub/go"
+
+    MINIMUM_COVERAGE=85.00 run bash "$SCRIPTS/check_coverage.sh"
+
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Average coverage: 87.5%"* ]]
+    [[ "$output" != *"58.3%"* ]]
+}
