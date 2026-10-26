@@ -8,7 +8,7 @@ parameters:
   version:
     description: Pulumi CLI version to install, without the leading "v".
     type: string
-    default: "3.259.0"
+    default: "3.272.0"
 
 steps:
   - restore_cache:
