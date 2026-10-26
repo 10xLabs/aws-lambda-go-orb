@@ -40,7 +40,7 @@ jobs:
           name: Scaffold a vendored Go Lambda project
           command: |
             mkdir -p vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.27\n' > go.mod
             : > vendor/modules.txt
             printf 'package main\n\nimport "fmt"\n\nfunc main() {\n\tfmt.Println("aws-lambda-go orb integration fixture")\n}\n' > main.go
       - aws-lambda-go/build:
@@ -75,7 +75,7 @@ jobs:
           name: Scaffold a vendored Go Lambda project in a subdirectory
           command: |
             mkdir -p cmd/lambda vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.27\n' > go.mod
             : > vendor/modules.txt
             printf 'package main\n\nfunc main() {}\n' > cmd/lambda/main.go
       - aws-lambda-go/build:
@@ -99,7 +99,7 @@ jobs:
       - run:
           name: Scaffold a Go project with no vendor directory
           command: |
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.27\n' > go.mod
             printf 'package main\n\nfunc main() {}\n' > main.go
             test ! -e vendor/modules.txt
       - aws-lambda-go/build:
@@ -125,7 +125,7 @@ jobs:
           name: Scaffold a vendored Go module with a covering test
           command: |
             mkdir -p vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.27\n' > go.mod
             : > vendor/modules.txt
             printf 'package fixture\n\nfunc Add(a, b int) int {\n\treturn a + b\n}\n' > fixture.go
             printf 'package fixture\n\nimport "testing"\n\nfunc TestAdd(t *testing.T) {\n\tif Add(1, 2) != 3 {\n\t\tt.Fatal("Add did not add")\n\t}\n}\n' > fixture_test.go
@@ -147,7 +147,7 @@ jobs:
           name: Scaffold a Go module with a golangci-lint v2 config
           command: |
             mkdir -p vendor
-            printf 'module example.com/orb-integration-fixture\n\ngo 1.26\n' > go.mod
+            printf 'module example.com/orb-integration-fixture\n\ngo 1.27\n' > go.mod
             : > vendor/modules.txt
             printf 'package fixture\n\nfunc Add(a, b int) int {\n\treturn a + b\n}\n' > fixture.go
             printf 'version: "2"\n' > .golangci.yml
